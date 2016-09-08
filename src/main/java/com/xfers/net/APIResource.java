@@ -2,9 +2,6 @@ package com.xfers.net;
 
 
 import com.google.common.base.Strings;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -15,7 +12,6 @@ import com.xfers.exception.APIConnectionException;
 import com.xfers.exception.APIException;
 import com.xfers.exception.AuthenticationException;
 import com.xfers.exception.InvalidRequestException;
-import com.xfers.model.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,11 +22,23 @@ public class APIResource {
         GET, POST, PUT, DELETE
     }
 
+    private static String handleResponse(HttpResponse<JsonNode> httpResponse) throws InvalidRequestException, AuthenticationException, APIException {
+        Integer status = httpResponse.getStatus();
+        String body = httpResponse.getBody().toString();
+        if (status == 200) {
+            return body;
+        } else if (status == 400) {
+            throw new InvalidRequestException(body, status);
+        } else if (status == 401) {
+            throw new AuthenticationException(body, status);
+        } else {
+            throw new APIException(body, status);
+        }
+    }
 
-
-    public static HttpResponse<JsonNode> request(APIResource.RequestMethod method,
+    public static String request(APIResource.RequestMethod method,
                                    String resourceUrl, Map<String, Object> params, String apiKey) throws AuthenticationException,
-            InvalidRequestException, APIException, APIConnectionException, UnirestException {
+            InvalidRequestException, APIException, UnirestException, APIConnectionException {
 
         String authHeader = "X-XFERS-APP-API-KEY";
         if (Strings.isNullOrEmpty(apiKey)) {
@@ -43,27 +51,32 @@ public class APIResource {
         headers.put(authHeader, apiKey);
 
         String url = Xfers.getApiBase() + resourceUrl;
+        HttpResponse<JsonNode> httpResponse = null;
 
         switch (method) {
             case GET:
-                return Unirest.get(url)
+                httpResponse = Unirest.get(url)
                         .headers(headers)
                         .queryString(params)
                         .asJson();
+                return handleResponse(httpResponse);
             case POST:
-                return Unirest.post(url)
+                httpResponse = Unirest.post(url)
                         .headers(headers)
                         .fields(params)
                         .asJson();
+                return handleResponse(httpResponse);
             case PUT:
-                return Unirest.put(url)
+                httpResponse = Unirest.put(url)
                         .headers(headers)
                         .fields(params)
                         .asJson();
+                return handleResponse(httpResponse);
             case DELETE:
-                return Unirest.delete(url)
+                httpResponse = Unirest.delete(url)
                         .headers(headers)
                         .asJson();
+                return handleResponse(httpResponse);
             default:
                 throw new APIConnectionException(
                         String.format(

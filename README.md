@@ -1,4 +1,4 @@
-# Xfers Java Bindings [![Build Status](https://travis-ci.org/xfers/xfers-java.svg?branch=master)](https://travis-ci.org/xfers/xfers-java)
+# Xfers Java Bindings
 
 You can sign up for a Xfers account at https://xfers.com.
 
@@ -20,57 +20,61 @@ Add this dependency to your project's POM:
 </dependency>
 ```
 
-### Gradle users
-
-Add this dependency to your project's build file:
-
-```groovy
-compile "com.xfers:xfers-java:1.1.0"
-```
-
-### Others
+### Non-Maven users
 
 You'll need to manually install the following JARs:
 
-* The Xfers JAR from https://github.com/Xfers/xfers-java/releases/latest
-* [Google Gson](http://code.google.com/p/google-gson/) from <http://google-gson.googlecode.com/files/google-gson-2.2.4-release.zip>.
-
+* [The Xfers JAR](https://github.com/Xfers/xfers-java/releases/latest) from https://github.com/Xfers/xfers-java/releases/latest.
+* [Google Gson](http://code.google.com/p/google-gson/) from <http://google-gson.googlecode.com/>.
+* [Google Guava](https://github.com/google/guava) from <https://github.com/google/guava>.
+* [Unirest for Java](http://unirest.io/java.html) from http://unirest.io/java.html.
 
 ## Documentation
 
-Please see the [Java API docs](https://xfers.com/docs/api/java) for the most up-to-date documentation.
+Please see the [API docs](http://docs.xfers.io/) for the most up-to-date documentation.
 
 ## Usage
 
 XfersExample.java
 
 ```java
-import java.util.HashMap;
-import java.util.Map;
-
 import com.xfers.Xfers;
-import com.xfers.exception.XfersException;
 import com.xfers.model.Charge;
-import com.xfers.net.RequestOptions;
+import com.xfers.model.Item;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class XfersExample {
 
     public static void main(String[] args) {
-        RequestOptions requestOptions = (new RequestOptionsBuilder()).setApiKey("YOUR-SECRET-KEY").build();
-        Map<String, Object> chargeMap = new HashMap<String, Object>();
-        chargeMap.put("amount", 100);
-        chargeMap.put("currency", "usd");
-        Map<String, Object> cardMap = new HashMap<String, Object>();
-        cardMap.put("number", "4242424242424242");
-        cardMap.put("exp_month", 12);
-        cardMap.put("exp_year", 2020);
-        chargeMap.put("card", cardMap);
+        Xfers.apiKey = "pXcfdAKNorDe_o1eou1NSp4mwssiEzem_6sg8fwnZWs";
+        Xfers.setSGSandbox();
+
         try {
-            Charge charge = Charge.create(chargeMap, requestOptions);
-            System.out.println(charge);
-        } catch (XfersException e) {
+            System.out.println("Listing charges without filter");
+            List<Charge> charges = Charge.listAll();
+            for (Charge charge : charges) {
+                System.out.println(charge.toString());
+                List<Item> items = charge.getItems();
+                for (Item item : items) {
+                    System.out.println(item.toString());
+                }
+            }
+
+            System.out.println("Listing charges with filter");
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("limit", "1");
+
+            charges = Charge.listAll(params);
+            for (Charge charge : charges) {
+                System.out.println(charge.toString());
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    }
+
 }
 ```

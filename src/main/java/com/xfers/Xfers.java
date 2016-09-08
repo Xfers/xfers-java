@@ -1,22 +1,32 @@
 package com.xfers;
 
 public class Xfers {
-    private static final String SANDBOX_API_BASE = "http://localhost:3000/api";
-    private static final String PRODUCTION_API_BASE = "https://www.xfers.io/api";
+    private static final String SG_SANDBOX_API_BASE = "https://sandbox.xfers.io/api/v3";
+    private static final String SG_PRODUCTION_API_BASE = "https://www.xfers.io/api/v3";
+    private static final String ID_SANDBOX_API_BASE = "https://sandbox-id.xfers.com/api/v3";
+    private static final String ID_PRODUCTION_API_BASE = "https://id.xfers.com/api/v3";
+
     public static volatile String apiKey;
 
-    private static volatile String apiBase = SANDBOX_API_BASE;
+    private static volatile String apiBase = "";
 
-    public static void setSandbox() {
-        apiBase = SANDBOX_API_BASE;
+    public static void setSGSandbox() {
+        apiBase = SG_SANDBOX_API_BASE;
     }
 
-    public static void setProduction() {
-        apiBase = PRODUCTION_API_BASE;
+    public static void setSGProduction() {
+        apiBase = SG_PRODUCTION_API_BASE;
+    }
+
+    public static void setIDSandbox() {
+        apiBase = ID_SANDBOX_API_BASE;
+    }
+
+    public static void setIDProduction() {
+        apiBase = ID_PRODUCTION_API_BASE;
     }
 
     public static String getApiBase() {
         return apiBase;
     }
-
 }

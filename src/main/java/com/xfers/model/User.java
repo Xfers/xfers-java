@@ -1,11 +1,7 @@
 package com.xfers.model;
 
-import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.xfers.exception.APIConnectionException;
 import com.xfers.exception.APIException;
@@ -14,9 +10,11 @@ import com.xfers.exception.InvalidRequestException;
 import com.xfers.net.APIResource;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 public class User {
-    private static final String resourceUrl = "/v3/user";
+    private static final String resourceUrl = "/user";
     @SerializedName("available_balance") private BigDecimal availableBalance;
     @SerializedName("ledger_balance") private BigDecimal ledgerBalance;
     @SerializedName("credit_card_rates") private BigDecimal creditCardRates;
@@ -39,18 +37,18 @@ public class User {
     @SerializedName("kyc_limit_remaining") private BigDecimal kycLimitRemaining;
     @SerializedName("kyc_verified") private Boolean kycVerified;
     @SerializedName("date_of_birth") private String dateOfBirth;
+    @SerializedName("bank_accounts") private List<BankAccount> bankAccounts;
+    @SerializedName("meta_data") private String metaData;
+
     private String country;
     private String email;
     private String nationality;
-    private String jsonString;
-
-//    private List<BankAccount> bankAccountList;
 
     public static User retrieve(String connectKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        HttpResponse<JsonNode> x = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, null, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, null, connectKey);
         Gson gson = new Gson();
-        return gson.fromJson(x.getBody().toString(), User.class);
+        return gson.fromJson(response, User.class);
     }
 
     public static User retrieve()
@@ -58,6 +56,42 @@ public class User {
         return retrieve(null);
     }
 
+    public static User update(Map<String, Object> params, String connectKey)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String response = APIResource.request(APIResource.RequestMethod.PUT, resourceUrl, params, connectKey);
+        Gson gson = new Gson();
+        return gson.fromJson(response, User.class);
+    }
+
+    public static User update(Map<String, Object> params)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        return update(params, null);
+    }
+
+    public static TransferInfo transferInfo(String connectKey)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String response = APIResource.request(APIResource.RequestMethod.GET, TransferInfo.resourceUrl, null, connectKey);
+        Gson gson = new Gson();
+        return gson.fromJson(response, TransferInfo.class);
+    }
+
+    public static TransferInfo transferInfo()
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        return transferInfo(null);
+    }
+
+    public static List<Activity> activities(String connectKey)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String str = APIResource.request(APIResource.RequestMethod.GET, Activity.resourceUrl, null, connectKey);
+        Gson gson = new Gson();
+        Response response =  gson.fromJson(str, Response.class);
+        return response.getActivities();
+    }
+
+    public static List<Activity> activities()
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        return activities(null);
+    }
 
     public BigDecimal getAvailableBalance() {
         return availableBalance;
@@ -73,6 +107,10 @@ public class User {
 
     public BigDecimal getCreditCardFees() {
         return creditCardFees;
+    }
+
+    public BigDecimal getBankTransferRates() {
+        return bankTransferRates;
     }
 
     public BigDecimal getBankTransferFees() {
@@ -95,10 +133,6 @@ public class User {
         return addressLine2;
     }
 
-    public String getNationality() {
-        return nationality;
-    }
-
     public String getPostalCode() {
         return postalCode;
     }
@@ -107,12 +141,8 @@ public class User {
         return identityNo;
     }
 
-    public String getCountry() {
-        return country;
-    }
-
-    public String getEmail() {
-        return email;
+    public String getIdDocument() {
+        return idDocument;
     }
 
     public String getIdBack() {
@@ -147,8 +177,33 @@ public class User {
         return kycVerified;
     }
 
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
 
-//    public List<BankAccount> getBankAccountList() {
-//        return bankAccountList;
-//    }
+    public String getCountry() {
+        return country;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getNationality() {
+        return nationality;
+    }
+
+    public List<BankAccount> getBankAccounts() {
+        return bankAccounts;
+    }
+
+    public String getMetaData() {
+        return metaData;
+    }
+
+    @Override
+    public String toString() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
 }

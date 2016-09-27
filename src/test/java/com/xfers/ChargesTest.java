@@ -43,6 +43,7 @@ public class ChargesTest {
             params.put("currency", "SGD");
             params.put("order_id", "A012315");
             params.put("description", "Carousell user - Konsolidate");
+            params.put("redirect", "false");
 
             Charge charge = Charge.create(params);
             System.out.println(charge.getId());

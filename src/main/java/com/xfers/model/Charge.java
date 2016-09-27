@@ -73,7 +73,6 @@ public class Charge {
 
     public static Charge create(Map<String, Object> params, String connectKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        params.put("redirect", "false");
         String response = APIResource.request(APIResource.RequestMethod.POST, resourceUrl, params, connectKey);
         Gson gson = new Gson();
         return gson.fromJson(response, Charge.class);

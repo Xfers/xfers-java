@@ -18,8 +18,8 @@ public class IntentsTest {
             Map<String, Object> params = new HashMap<String, Object>();
             params.put("amount", "5.54");
             params.put("currency", "SGD");
-            params.put("bank", "DBS");
-            params.put("request_id", "AZ0008");
+            params.put("bank", "OCBC");
+            params.put("request_id", "AD0008");
             params.put("notify_url", "https://mysite.com/topup_notification");
 
             Intent intent = Intent.create(params);
@@ -39,11 +39,17 @@ public class IntentsTest {
         }
 
         try {
-            System.out.println("Listing intents");
-            List<Intent> intents = Intent.listAll();
-            for (Intent intent : intents) {
-                System.out.println(intent.toString());
-            }
+            System.out.println("Retrieving latest intent");
+            Intent intent = Intent.retrieve();
+            System.out.println(intent.getId());
+            System.out.println(intent.getAmount());
+            System.out.println(intent.getCurrency());
+            System.out.println(intent.getBank());
+            System.out.println(intent.getStatus());
+            System.out.println(intent.getCheckoutUrl());
+            System.out.println(intent.getRequestId());
+            System.out.println(intent.getNotifyUrl());
+            System.out.println(intent.getBankName());
         } catch (Exception e) {
             e.printStackTrace();
         }

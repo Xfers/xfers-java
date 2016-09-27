@@ -35,16 +35,16 @@ public class Intent {
     private String bank;
     private String status;
 
-    public static List<Intent> listAll(Map<String, Object> params, String connectKey)
+    public static Intent retrieve(String connectKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, params, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, null, connectKey);
         Gson gson = new Gson();
-        return new ArrayList<Intent>(Arrays.asList(gson.fromJson(response, Intent[].class)));
+        return gson.fromJson(response, Intent.class);
     }
 
-    public static List<Intent> listAll()
+    public static Intent retrieve()
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        return listAll(null, null);
+        return retrieve(null);
     }
 
     public static Intent create(Map<String, Object> params, String connectKey)

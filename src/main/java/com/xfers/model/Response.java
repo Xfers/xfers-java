@@ -12,8 +12,11 @@ public class Response {
     @SerializedName("withdrawal_requests") private List<Withdrawal> withdrawalRequests;
     @SerializedName("user_api_token") private String userApiToken;
     @SerializedName("sign_up_url") private String signUpUrl;
+    @SerializedName("return_url") private String returnUrl;
 
+    private Boolean success;
     private String msg;
+    private String error;
     private List<Activity> activities;
 
     public String getAvailableBalance() {
@@ -52,5 +55,17 @@ public class Response {
     public String toString() {
         Gson gson = new Gson();
         return gson.toJson(this);
+    }
+
+    public Boolean getSuccess() {
+        return success;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public String getReturnUrl() {
+        return returnUrl;
     }
 }

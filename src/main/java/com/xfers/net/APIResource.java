@@ -75,6 +75,7 @@ public class APIResource {
             case DELETE:
                 httpResponse = Unirest.delete(url)
                         .headers(headers)
+                        .fields(params)
                         .asJson();
                 return handleResponse(httpResponse);
             default:

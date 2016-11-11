@@ -10,10 +10,7 @@ import com.xfers.exception.InvalidRequestException;
 import com.xfers.net.APIResource;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Charge {
     private static final String resourceUrl = "/charges";
@@ -96,19 +93,6 @@ public class Charge {
         return cancel(id, null);
     }
 
-    public static Charge settle(String id, String connectKey)
-            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String url = resourceUrl + "/" + id;
-        String response = APIResource.request(APIResource.RequestMethod.POST, url, null, connectKey);
-        Gson gson = new Gson();
-        return gson.fromJson(response, Charge.class);
-    }
-
-    public static Charge settle(String id)
-            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        return settle(id, null);
-    }
-
     public static Charge refund(String id, String connectKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = resourceUrl + "/" + id + "/refunds";
@@ -135,6 +119,18 @@ public class Charge {
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         return validate(transactionId, params, null);
     }
+
+    public static Charge authorize(String chargeId, String authCode)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("auth_code", authCode);
+
+        String url = resourceUrl + "/" + chargeId + "/authorize";
+        String str = APIResource.request(APIResource.RequestMethod.POST, url, params, null);
+        Gson gson = new Gson();
+        return gson.fromJson(str, Charge.class);
+    }
+
 
     public String getCheckoutUrl() {
         return checkoutUrl;

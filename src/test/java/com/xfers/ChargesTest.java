@@ -11,7 +11,7 @@ import java.util.Vector;
 
 public class ChargesTest {
     public static void main(String[] args) {
-        Xfers.apiKey = "uoGUpNsfuFUXZUz2DQPAQXksG1JuwWVsy8zwsWvS29x";
+        Xfers.apiKey = "WuTp3zM7UEpmUkeAyGPxRHmnXAx-hXJ7jzdqmxY6S1o";
         Xfers.setSGSandbox();
 
         try {
@@ -100,14 +100,6 @@ public class ChargesTest {
         }
 
         try {
-            System.out.println("Settling a charge");
-            Charge charge = Charge.settle("da454bce431a4f368667aa1db59427ad");
-            System.out.println(charge.toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
             System.out.println("Refunding a charge");
             Charge charge = Charge.refund("da454bce431a4f368667aa1db59427ad");
             System.out.println(charge.toString());
@@ -128,6 +120,15 @@ public class ChargesTest {
             e.printStackTrace();
         }
 
+        try {
+            System.out.println("Authorize a charge");
+            String chargeId = "236d026fb4a5457ca9f60d3b1e806bbc";
+            String authCode = "482729";
+            Charge charge = Charge.authorize(chargeId, authCode);
+            System.out.println(charge.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 }

@@ -14,20 +14,41 @@ import java.util.Map;
 public class Connect {
     private static final String resourceUrl = "/authorize";
 
-    public static Response getToken(Map<String, Object> params, String connectKey)
+    public static Response getToken(Map<String, Object> params, String appKey, String secretKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = resourceUrl + "/get_token";
-        String response = APIResource.requestConnect(APIResource.RequestMethod.GET, url, params, connectKey);
+        String phoneNumber = (String) params.get("phone_no");
+        String OTP = (String) params.get("otp");
+
+        params.put("signature", getSignature(phoneNumber, secretKey, OTP) );
+
+        String response = APIResource.requestConnect(APIResource.RequestMethod.GET, url, params, appKey);
         Gson gson = new Gson();
         return gson.fromJson(response, Response.class);
     }
 
-    public static Response authorize(Map<String, Object> params, String connectKey)
+    public static Response authorize(Map<String, Object> params, String appKey, String secretKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+
         String url = resourceUrl + "/signup_login";
-        String response = APIResource.requestConnect(APIResource.RequestMethod.POST, url, params, connectKey);
+        String phoneNumber = (String) params.get("phone_no");
+        params.put("signature", getSignature(phoneNumber, secretKey) );
+        String response = APIResource.requestConnect(APIResource.RequestMethod.POST, url, params, appKey);
         Gson gson = new Gson();
         return gson.fromJson(response, Response.class);
+
+    }
+
+    public static Response privateAuthorize (Map<String, Object> params, String appKey, String secretKey)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+
+        String url = resourceUrl + "/private_wallet";
+        String phoneNumber = (String) params.get("phone_no");
+        params.put("signature", getSignature(phoneNumber, secretKey) );
+        String response = APIResource.requestConnect(APIResource.RequestMethod.POST, url, params, appKey);
+        Gson gson = new Gson();
+        return gson.fromJson(response, Response.class);
+
     }
 
     public static String validate_phone(String phoneNumber)
@@ -51,7 +72,6 @@ public class Connect {
         {
             return "+65".concat(phoneNumber);
         }
-
         // assume the others are indonesian
         else
         {
@@ -66,25 +86,24 @@ public class Connect {
         }
 
     }
-    public static String getSignature(String phoneNumber, String appSecret, String OTP) {
+    public static String getSignature(String phoneNumber, String secretKey, String OTP) {
         String beforeSHA1;
-
         phoneNumber = validate_phone(phoneNumber);
 
         if(OTP == null)
         {
-            beforeSHA1 = phoneNumber.concat(appSecret);
+            beforeSHA1 = phoneNumber.concat(secretKey);
         }
         else
         {
-            beforeSHA1 = phoneNumber.concat(OTP).concat(appSecret);
+            beforeSHA1 = phoneNumber.concat(OTP).concat(secretKey);
         }
         String signature = DigestUtils.sha1Hex(beforeSHA1);
         return signature;
     }
 
-    public static String getSignature(String phoneNumber, String appSecret) {
-        return getSignature(phoneNumber, appSecret,null);
+    public static String getSignature(String phoneNumber, String secretKey) {
+        return getSignature(phoneNumber, secretKey,null);
     }
 
 }

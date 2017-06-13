@@ -35,9 +35,9 @@ public class Intent {
     private String bank;
     private String status;
 
-    public static Intent retrieve(String connectKey)
+    public static Intent retrieve(String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, null, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, null, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, Intent.class);
     }
@@ -47,9 +47,9 @@ public class Intent {
         return retrieve(null);
     }
 
-    public static Intent create(Map<String, Object> params, String connectKey)
+    public static Intent create(Map<String, Object> params, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String response = APIResource.request(APIResource.RequestMethod.POST, resourceUrl, params, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.POST, resourceUrl, params, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, Intent.class);
     }
@@ -59,10 +59,10 @@ public class Intent {
         return create(params, null);
     }
 
-    public static Intent cancel(String id, String connectKey)
+    public static Intent cancel(String id, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = resourceUrl + "/" + id + "/cancel";
-        String response = APIResource.request(APIResource.RequestMethod.POST, url, null, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.POST, url, null, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, Intent.class);
     }

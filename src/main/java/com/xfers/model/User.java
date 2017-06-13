@@ -44,9 +44,9 @@ public class User {
     private String email;
     private String nationality;
 
-    public static User retrieve(String connectKey)
+    public static User retrieve(String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, null, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, null, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, User.class);
     }
@@ -56,9 +56,9 @@ public class User {
         return retrieve(null);
     }
 
-    public static User update(Map<String, Object> params, String connectKey)
+    public static User update(Map<String, Object> params, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String response = APIResource.request(APIResource.RequestMethod.PUT, resourceUrl, params, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.PUT, resourceUrl, params, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, User.class);
     }
@@ -68,9 +68,9 @@ public class User {
         return update(params, null);
     }
 
-    public static TransferInfo transferInfo(String connectKey)
+    public static TransferInfo transferInfo(String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String response = APIResource.request(APIResource.RequestMethod.GET, TransferInfo.resourceUrl, null, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.GET, TransferInfo.resourceUrl, null, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, TransferInfo.class);
     }
@@ -80,9 +80,9 @@ public class User {
         return transferInfo(null);
     }
 
-    public static List<Activity> activities(String connectKey)
+    public static List<Activity> activities(String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String str = APIResource.request(APIResource.RequestMethod.GET, Activity.resourceUrl, null, connectKey);
+        String str = APIResource.request(APIResource.RequestMethod.GET, Activity.resourceUrl, null, userApiToken);
         Gson gson = new Gson();
         Response response =  gson.fromJson(str, Response.class);
         return response.getActivities();

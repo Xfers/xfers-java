@@ -13,6 +13,7 @@ public class BankAccountTest {
         Xfers.setSGSandbox();
 
         try {
+            System.out.println("Retrieving Bank Account");
             List<BankAccount> bankAccounts = BankAccount.retrieve();
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
@@ -23,6 +24,7 @@ public class BankAccountTest {
 
         try {
             Map<String, Object> params = new HashMap<String, Object>();
+            System.out.println("Adding Bank Account");
             params.put("account_no", "03931234323");
             params.put("bank", "DBS");
             List<BankAccount> bankAccounts = BankAccount.add(params);
@@ -35,6 +37,7 @@ public class BankAccountTest {
 
         try {
             Map<String, Object> params = new HashMap<String, Object>();
+            System.out.println("Updating Bank Account");
             params.put("account_no", "9102031012");
             params.put("bank", "UOB");
 
@@ -47,6 +50,7 @@ public class BankAccountTest {
         }
 
         try {
+            System.out.println("Deleting Bank Account");
             List<BankAccount> bankAccounts = BankAccount.delete("11");
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
@@ -57,6 +61,7 @@ public class BankAccountTest {
 
         try {
             Map<String, Object> params = new HashMap<String, Object>();
+            System.out.println("Making a withdrawal request");
             params.put("amount", "5");
             params.put("express", true);
 
@@ -75,6 +80,7 @@ public class BankAccountTest {
         }
 
         try {
+            System.out.println("Listing all withdrawal request");
             List<Withdrawal> withdrawalRequests = BankAccount.withdrawalRequests("pending");
             for (Withdrawal withdrawal : withdrawalRequests) {
                 System.out.println(withdrawal.toString());

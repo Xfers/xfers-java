@@ -31,10 +31,9 @@ public class IntentsTest {
             System.out.println(intent.getCurrency());
             System.out.println(intent.getBank());
             System.out.println(intent.getStatus());
-            System.out.println(intent.getCheckoutUrl());
+            System.out.println(intent.getBankAccountNo());
             System.out.println(intent.getRequestId());
             System.out.println(intent.getNotifyUrl());
-            System.out.println(intent.getBankName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,12 +44,11 @@ public class IntentsTest {
             System.out.println(intent.getId());
             System.out.println(intent.getAmount());
             System.out.println(intent.getCurrency());
-            System.out.println(intent.getBank());
-            System.out.println(intent.getStatus());
-            System.out.println(intent.getCheckoutUrl());
+            System.out.println(intent.getBankName());
+            System.out.println(intent.getBankAbbrev());
+            System.out.println(intent.getBankAccountNo());
             System.out.println(intent.getRequestId());
             System.out.println(intent.getNotifyUrl());
-            System.out.println(intent.getBankName());
         } catch (Exception e) {
             e.printStackTrace();
         }

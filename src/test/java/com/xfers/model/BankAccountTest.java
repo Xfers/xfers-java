@@ -1,5 +1,11 @@
-package com.xfers;
+package com.xfers.model;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
+import com.xfers.Xfers;
+import com.xfers.exception.APIConnectionException;
+import com.xfers.exception.APIException;
+import com.xfers.exception.AuthenticationException;
+import com.xfers.exception.InvalidRequestException;
 import com.xfers.model.*;
 
 import java.util.HashMap;
@@ -7,12 +13,20 @@ import java.util.List;
 import java.util.Map;
 
 public class BankAccountTest {
-    public static void main(String[] args) {
-        Xfers.apiKey = "pXcfdAKNorDe_o1eou1NSp4mwssiEzem_6sg8fwnZWs";
+    public static void main(String[] args) throws APIException, UnirestException, AuthenticationException, InvalidRequestException, APIConnectionException {
+        Xfers.apiKey = "6BY-yFUzu3jG5vj95PyD5VCGzGZUz9SBauEnhgFB9Ds"; // API Token of demo@xfers.io
         Xfers.setSGSandbox();
+        List<BankAccount> bankAccounts;
+
+        System.out.println("Listing all available xfers Banks");
+        bankAccounts = BankAccount.availableBanks();
+        for (BankAccount bankAccount : bankAccounts) {
+            System.out.println(bankAccount.toString());
+        }
 
         try {
-            List<BankAccount> bankAccounts = BankAccount.retrieve();
+            System.out.println("Retrieving Bank Account");
+            bankAccounts = BankAccount.retrieve();
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
             }
@@ -22,9 +36,10 @@ public class BankAccountTest {
 
         try {
             Map<String, Object> params = new HashMap<String, Object>();
-            params.put("account_no", "03931234323");
+            System.out.println("Adding Bank Account");
+            params.put("account_no", "0393123432");
             params.put("bank", "DBS");
-            List<BankAccount> bankAccounts = BankAccount.add(params);
+            bankAccounts = BankAccount.add(params);
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
             }
@@ -34,10 +49,11 @@ public class BankAccountTest {
 
         try {
             Map<String, Object> params = new HashMap<String, Object>();
+            System.out.println("Updating Bank Account");
             params.put("account_no", "9102031012");
             params.put("bank", "UOB");
 
-            List<BankAccount> bankAccounts = BankAccount.update("11", params);
+            bankAccounts = BankAccount.update("11", params);
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
             }
@@ -46,7 +62,8 @@ public class BankAccountTest {
         }
 
         try {
-            List<BankAccount> bankAccounts = BankAccount.delete("11");
+            System.out.println("Deleting Bank Account");
+            bankAccounts = BankAccount.delete("11");
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
             }
@@ -56,6 +73,7 @@ public class BankAccountTest {
 
         try {
             Map<String, Object> params = new HashMap<String, Object>();
+            System.out.println("Making a withdrawal request");
             params.put("amount", "5");
             params.put("express", true);
 
@@ -74,6 +92,7 @@ public class BankAccountTest {
         }
 
         try {
+            System.out.println("Listing all withdrawal request");
             List<Withdrawal> withdrawalRequests = BankAccount.withdrawalRequests("pending");
             for (Withdrawal withdrawal : withdrawalRequests) {
                 System.out.println(withdrawal.toString());

@@ -33,9 +33,9 @@ public class Payout {
     private String status;
 
 
-    public static List<Payout> listAll(Map<String, Object> params, String connectKey)
+    public static List<Payout> listAll(Map<String, Object> params, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, params, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, params, userApiToken);
         Gson gson = new Gson();
         return new ArrayList<Payout>(Arrays.asList(gson.fromJson(response, Payout[].class)));
     }
@@ -50,10 +50,10 @@ public class Payout {
         return listAll(null, null);
     }
 
-    public static Payout retrieve(String id, String connectKey)
+    public static Payout retrieve(String id, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = resourceUrl + "/" + id;
-        String response = APIResource.request(APIResource.RequestMethod.GET, url, null, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.GET, url, null, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, Payout.class);
     }
@@ -66,9 +66,9 @@ public class Payout {
         return retrieve(id, null);
     }
 
-    public static Payout create(Map<String, Object> params, String connectKey)
+    public static Payout create(Map<String, Object> params, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String response = APIResource.request(APIResource.RequestMethod.POST, resourceUrl, params, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.POST, resourceUrl, params, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, Payout.class);
     }

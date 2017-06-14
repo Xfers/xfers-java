@@ -40,11 +40,30 @@ public class APIResource {
                                    String resourceUrl, Map<String, Object> params, String apiKey) throws AuthenticationException,
             InvalidRequestException, APIException, UnirestException, APIConnectionException {
 
-        String authHeader = "X-XFERS-APP-API-KEY";
+        String authHeader = "X-XFERS-USER-API-KEY";
         if (Strings.isNullOrEmpty(apiKey)) {
-            authHeader = "X-XFERS-USER-API-KEY";
             apiKey = Xfers.apiKey;
         }
+
+        return requestHelper(method,resourceUrl,params,apiKey,authHeader);
+    }
+
+    public static String requestConnect(APIResource.RequestMethod method,
+                                        String resourceUrl, Map<String, Object> params, String apiKey) throws AuthenticationException,
+            InvalidRequestException, APIException, UnirestException, APIConnectionException {
+
+        String authHeader = "X-XFERS-APP-API-KEY";
+        if (Strings.isNullOrEmpty(apiKey)) {
+            throw new AuthenticationException("You must put your X-XFERS-APP-API-KEY", 400);
+        }
+        return requestHelper(method,resourceUrl,params,apiKey,authHeader);
+    }
+
+
+    public static String requestHelper(APIResource.RequestMethod method,
+                                       String resourceUrl, Map<String, Object> params, String apiKey, String authHeader) throws AuthenticationException,
+            InvalidRequestException, APIException, UnirestException, APIConnectionException {
+
 
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("accept", "application/json");
@@ -86,6 +105,7 @@ public class APIResource {
                                         + "support@xfers.io for assistance.",
                                 method));
         }
-
+        
     }
+
 }

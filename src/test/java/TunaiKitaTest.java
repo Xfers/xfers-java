@@ -40,18 +40,18 @@ public class TunaiKitaTest {
             createIntent(userApiToken);// this function will give a callback to https://tunaikita.com/topup_notification when user pay
 
             seeOutstandingIntent(userApiToken);
-            // user make a transfer
-            makeTransfer();
-
-            // after do the simulate transfer, this function must be called
-            // let's assume that when https://tunaikita.com/topup_notification get a callback, the following function is called
-            moneyReceivedCallback(userApiToken);
-            // end of the sending money process
-
-            // start of the sending money process
-            String bankAccountId = addBankAndCheck(userApiToken);
-
-            sendMoney(bankAccountId, userApiToken);
+//            // user make a transfer
+//            makeTransfer();
+//
+//            // after do the simulate transfer, this function must be called
+//            // let's assume that when https://tunaikita.com/topup_notification get a callback, the following function is called
+//            moneyReceivedCallback(userApiToken);
+//            // end of the sending money process
+//
+//            // start of the sending money process
+//            String bankAccountId = addBankAndCheck(userApiToken);
+//
+//            sendMoney(bankAccountId, userApiToken);
             // end of the sending money process
 
         } catch (Exception e) {
@@ -73,8 +73,11 @@ public class TunaiKitaTest {
     public static void seeOutstandingIntent(String userApiToken) throws APIException, UnirestException, AuthenticationException, InvalidRequestException, APIConnectionException {
         Intent seePendingTransaction = Intent.retrieve(userApiToken);
 
-        System.out.println("The user: " + username + "has this following unpaid transaction:");
-        System.out.println(seePendingTransaction.toString());
+        System.out.println("The user: " + username + " has this following unpaid transaction:");
+        List<TransferInfo> transferInfoArray = seePendingTransaction.getTransferInfoArray();
+        for (TransferInfo transferInfo : transferInfoArray) {
+            System.out.println( username + " needs to transfer the following amount: " + intValue(seePendingTransaction.getAmount()) + " of the following bank: " + transferInfo.getBankNameFull() + " to the following account number: " + transferInfo.getBankAccountNo());
+        }
     }
 
     public static Charge moneyReceivedCallback(String userApiToken) throws APIException, UnirestException, AuthenticationException, InvalidRequestException, APIConnectionException {
@@ -111,12 +114,14 @@ public class TunaiKitaTest {
         params.put("amount", "80000"); // this is a required field
         params.put("currency", "IDR"); // this is a required field
         params.put("request_id", someRandomString); // this is a required field and must be unique
-        params.put("bank", "MANDIRI");
+
         params.put("notify_url", "https://tunaikita.com/topup_notification"); // notify url will give you the callback URL when the money has been transferred to the account
         Intent intent = Intent.create(params, userApiToken);
 
-        System.out.println("Hi " + username + " please Transfer the following amount: " + intValue(intent.getAmount()) + " of the following bank: " + intent.getBankName() + " to the following account number: " + intent.getBankAccountNo());
-
+        List<TransferInfo> transferInfoArray = intent.getTransferInfoArray();
+        for (TransferInfo transferInfo : transferInfoArray) {
+            System.out.println("Hi " + username + " please Transfer the following amount: " + intValue(intent.getAmount()) + " of the following bank: " + transferInfo.getBankNameFull() + " to the following account number: " + transferInfo.getBankAccountNo());
+        }
 
     }
 
@@ -176,7 +181,8 @@ public class TunaiKitaTest {
 
         Payout payout = Payout.create(params,Xfers.apiKey); // you can change this line to only  Payout.create(params) if you want
 
-        TimeUnit.SECONDS.sleep(30); // Withdrawal request is taken after payout from Tunaikita's wallet to user's wallet
+        // TimeUnit.SECONDS.sleep(30); // Withdrawal request is taken after payout from Tunaikita's wallet to user's wallet
+        // this needs to be uncommented or else insufficient amount bug
 
         System.out.println("Making a withdrawal request");
         params = new HashMap<String, Object>();

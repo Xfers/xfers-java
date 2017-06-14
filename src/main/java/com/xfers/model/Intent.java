@@ -28,6 +28,7 @@ public class Intent {
     @SerializedName("account_name") private String accountName;
     @SerializedName("bank_account_no") private String bankAccountNo;
     @SerializedName("expiration_date") private String expirationDate;
+    @SerializedName("transfer_info_array") private List<TransferInfo> transferInfoArray;
 
     private String id;
     private BigDecimal amount;
@@ -125,6 +126,10 @@ public class Intent {
 
     public String getStatus() {
         return status;
+    }
+
+    public List<TransferInfo> getTransferInfoArray() {
+        return transferInfoArray;
     }
 
     @Override

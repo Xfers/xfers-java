@@ -19,7 +19,33 @@ public class BankAccount {
     @SerializedName("account_no") private String accountNo;
     @SerializedName("detected_name") private String detected_name;
 
+    // for list availableBanks
+    @SerializedName("name") private String name;
+    @SerializedName("abbreviation") private String abbreviation;
+    @SerializedName("img_src") private String img_src;
+
     private String id;
+
+    public static boolean isBankAvailable (String bankAbbrev) throws APIException, UnirestException, AuthenticationException, InvalidRequestException, APIConnectionException {
+        List<BankAccount> availableBanks = availableBanks(null);
+        for (BankAccount bankAccount : availableBanks) {
+            if(bankAccount.getAbbreviation().equals(bankAbbrev.toUpperCase()) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static List<BankAccount> availableBanks(String userApiToken) throws APIException, UnirestException, AuthenticationException, InvalidRequestException, APIConnectionException {
+        String response = APIResource.request(APIResource.RequestMethod.GET, "/banks", null,userApiToken);
+        Gson gson = new Gson();
+        return new ArrayList<BankAccount>(Arrays.asList(gson.fromJson(response, BankAccount[].class)));
+    }
+
+    public static List<BankAccount> availableBanks() throws APIException, UnirestException, AuthenticationException, InvalidRequestException, APIConnectionException {
+        return availableBanks(null);
+    }
 
     public static List<BankAccount> retrieve(String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
@@ -118,6 +144,19 @@ public class BankAccount {
     public String getId() {
         return id;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAbbreviation() {
+        return abbreviation;
+    }
+
+    public String getImgSrc() {
+        return img_src;
+    }
+
 
     @Override
     public String toString() {

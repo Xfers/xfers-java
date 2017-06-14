@@ -1,6 +1,11 @@
 package com.xfers.model;
 
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.xfers.Xfers;
+import com.xfers.exception.APIConnectionException;
+import com.xfers.exception.APIException;
+import com.xfers.exception.AuthenticationException;
+import com.xfers.exception.InvalidRequestException;
 import com.xfers.model.*;
 
 import java.util.HashMap;
@@ -8,13 +13,20 @@ import java.util.List;
 import java.util.Map;
 
 public class BankAccountTest {
-    public static void main(String[] args) {
-        Xfers.apiKey = "pXcfdAKNorDe_o1eou1NSp4mwssiEzem_6sg8fwnZWs";
+    public static void main(String[] args) throws APIException, UnirestException, AuthenticationException, InvalidRequestException, APIConnectionException {
+        Xfers.apiKey = "6BY-yFUzu3jG5vj95PyD5VCGzGZUz9SBauEnhgFB9Ds"; // API Token of demo@xfers.io
         Xfers.setSGSandbox();
+        List<BankAccount> bankAccounts;
+
+        System.out.println("Listing all available xfers Banks");
+        bankAccounts = BankAccount.availableBanks();
+        for (BankAccount bankAccount : bankAccounts) {
+            System.out.println(bankAccount.toString());
+        }
 
         try {
             System.out.println("Retrieving Bank Account");
-            List<BankAccount> bankAccounts = BankAccount.retrieve();
+            bankAccounts = BankAccount.retrieve();
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
             }
@@ -25,9 +37,9 @@ public class BankAccountTest {
         try {
             Map<String, Object> params = new HashMap<String, Object>();
             System.out.println("Adding Bank Account");
-            params.put("account_no", "03931234323");
+            params.put("account_no", "0393123432");
             params.put("bank", "DBS");
-            List<BankAccount> bankAccounts = BankAccount.add(params);
+            bankAccounts = BankAccount.add(params);
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
             }
@@ -41,7 +53,7 @@ public class BankAccountTest {
             params.put("account_no", "9102031012");
             params.put("bank", "UOB");
 
-            List<BankAccount> bankAccounts = BankAccount.update("11", params);
+            bankAccounts = BankAccount.update("11", params);
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
             }
@@ -51,7 +63,7 @@ public class BankAccountTest {
 
         try {
             System.out.println("Deleting Bank Account");
-            List<BankAccount> bankAccounts = BankAccount.delete("11");
+            bankAccounts = BankAccount.delete("11");
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
             }

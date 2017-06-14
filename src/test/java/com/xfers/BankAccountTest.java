@@ -1,6 +1,5 @@
-package com.xfers.model;
+package com.xfers;
 
-import com.xfers.Xfers;
 import com.xfers.model.*;
 
 import java.util.HashMap;

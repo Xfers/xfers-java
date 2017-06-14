@@ -1,7 +1,6 @@
-package com.xfers.model;
+package com.xfers;
 
 import com.google.gson.Gson;
-import com.xfers.Xfers;
 import com.xfers.model.Charge;
 import com.xfers.model.Item;
 

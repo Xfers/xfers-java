@@ -17,6 +17,8 @@ public class BankAccount {
 
     @SerializedName("bank_abbrev") private String bankAbbrev;
     @SerializedName("account_no") private String accountNo;
+    @SerializedName("detected_name") private String detected_name;
+
     private String id;
 
     public static List<BankAccount> retrieve(String userApiToken)
@@ -107,6 +109,10 @@ public class BankAccount {
 
     public String getAccountNo() {
         return accountNo;
+    }
+
+    public String getDetectedName() {
+        return detected_name;
     }
 
     public String getId() {

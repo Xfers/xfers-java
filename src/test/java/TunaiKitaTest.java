@@ -34,17 +34,18 @@ public class TunaiKitaTest {
             Response response = Connect.privateAuthorize(params, xfersAppApiKey, xfersAppSecretKey);
             userApiToken = response.getUserApiToken(); // save this value in database!
 
-
             System.out.println("Updating current user");
             Map<String, Object> updateParams = new HashMap<String, Object>();
-            updateParams.put("first_name", "wenbin");
-            updateParams.put("last_name", "tay");
+            updateParams.put("first_name", "Winston");
+            updateParams.put("last_name", "Andersen");
+            updateParams.put("identity_no", "317201180894003"); // KTP number
             updateParams.put("address_line_1", "Blk 712 loyang Avenue 5");
             updateParams.put("address_line_2", "#01-41");
-            updateParams.put("nationality", "Singaporean");
-            updateParams.put("postal_code", "340712");
-            updateParams.put("identity_no", "s86917127G");
-            updateParams.put("country", "sg");
+            updateParams.put("date_of_birth", "1986-02-27"); // format is yyyy-mm-dd
+            updateParams.put("nationality", "Indonesian");
+            updateParams.put("gender", "male"); // male / female
+            updateParams.put("country", "id"); // just set this to id always
+            // required data to be given is first_name, last_name, identity_no, address_line_1, date_of_birth, nationality, gender
 
             User user = User.update(updateParams, userApiToken);
             // end of the log in process
@@ -57,7 +58,7 @@ public class TunaiKitaTest {
             params.put("request_id", someRandomString); // this is a required field and must be unique
             params.put("bank", "BCA");
             params.put("notify_url", "https://tunaikita.com/topup_notification"); // notify url will give you the callback URL when the money has been transferred to the account
-            Intent intent = Intent.create(params, userApiToken); // may be updated soon
+            Intent intent = Intent.create(params, userApiToken); 
 
             System.out.println("Hi User please Transfer the following amount: " + intent.getAmount() + intent.getBankAccountNo());
 
@@ -93,7 +94,7 @@ public class TunaiKitaTest {
             for (BankAccount bankAccount : bankAccounts) {
                 System.out.println(bankAccount.toString());
                 bankAccountId = bankAccount.getId();
-                fuzzyCheck(bankAccount.toString());
+                fuzzyCheck(bankAccount.getDetectedName());
             }
 
 
@@ -129,7 +130,7 @@ public class TunaiKitaTest {
 
     }
 
-    public static boolean fuzzyCheck(String someJSON){
+    public static boolean fuzzyCheck(String detectedName){
         //Tunai Kita code to handle wrong bank name
         return true;
     }
@@ -148,9 +149,10 @@ public class TunaiKitaTest {
         params.put("description", "any description");
         params.put("redirect", false);
         params.put("debit_only", "true"); // this should not be forgotten
+        params.put("user_api_token", userApiToken); // put this as the user api token that we got from during the signup process
 
 
-        charge = Charge.create(params, userApiToken);
+        charge = Charge.create(params, Xfers.apiKey); // you can change this line to only  Charge.create(params) if you want
         System.out.println("Charge has been succesfully created: ");
         System.out.println(charge.toString());
 

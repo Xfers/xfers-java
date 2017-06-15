@@ -16,7 +16,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.xfers</groupId>
   <artifactId>xfers-java</artifactId>
-  <version>1.3.0</version>
+  <version>1.4.0</version>
 </dependency>
 ```
 
@@ -28,6 +28,8 @@ You'll need to manually install the following JARs:
 * [Google Gson](http://code.google.com/p/google-gson/) from <http://google-gson.googlecode.com/>.
 * [Google Guava](https://github.com/google/guava) from <https://github.com/google/guava>.
 * [Unirest for Java](http://unirest.io/java.html) from http://unirest.io/java.html.
+* [JUnit](http://junit.org/junit4/) from http://junit.org/junit4/.
+
 
 ## Documentation
 

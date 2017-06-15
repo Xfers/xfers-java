@@ -37,21 +37,21 @@ public class SamplePrivateWallet {
 
             // start of the receive money process
 //            // create a bill that the user has to pay following amount to the following VA
-//            createIntent(userApiToken);// this function will give a callback to https://mysite.com/topup_notification when user pay
+            createIntent(userApiToken);// this function will give a callback to https://mysite.com/topup_notification when user pay
 //
-//            seeOutstandingIntent(userApiToken);
+            seeOutstandingIntent(userApiToken);
 ////            // user make a transfer
-//            makeTransfer();
+            makeTransfer();
 //
 //            // after do the simulate transfer, this function must be called
 //            // let's assume that when https://mysite.com/topup_notification get a callback, the following function is called
-//            moneyReceivedCallback(userApiToken);
+            moneyReceivedCallback(userApiToken);
 //            // end of the sending money process
 //
 //            // start of the sending money process
             String bankAccountId = addBankAndCheck(userApiToken);
 //
-//            sendMoney(bankAccountId, userApiToken);
+            sendMoney(bankAccountId, userApiToken);
             // end of the sending money process
 
         } catch (Exception e) {
@@ -182,8 +182,7 @@ public class SamplePrivateWallet {
 
         Payout payout = Payout.create(params,Xfers.apiKey); // you can change this line to only  Payout.create(params) if you want
 
-        // TimeUnit.SECONDS.sleep(30); // Withdrawal request is taken after payout from Merchant's wallet to user's wallet
-        // this needs to be uncommented or else insufficient amount bug
+         TimeUnit.SECONDS.sleep(10);
 
         System.out.println("Making a withdrawal request");
         params = new HashMap<String, Object>();

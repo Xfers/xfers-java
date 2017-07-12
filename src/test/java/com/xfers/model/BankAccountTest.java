@@ -49,8 +49,8 @@ public class BankAccountTest {
 //        test list bank account
         testListBankAccounts();
 
-        String BankIdTwo = "399";
-        testMakeWithdrawalRequest(BankIdTwo);
+//        String BankIdTwo = "399";
+//        testMakeWithdrawalRequest(BankIdTwo);
 //        make a withdrawal from this bank account
 
         testListWithdrawalRequest();

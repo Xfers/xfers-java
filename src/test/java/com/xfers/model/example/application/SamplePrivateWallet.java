@@ -37,9 +37,9 @@ public class SamplePrivateWallet {
         Xfers.setIDSandbox();
 //        Xfers.setEndpoint("http://localhost:3000/api/v3");
 
-        String xfersAppApiKey = "y_9SYLDYB5sgwg6RtPz-T3fXkv47HMvJ72WxhU5yzMA";
-        String xfersAppSecretKey = "Zym_nnWsRLg7dUS8b6iweMphjUvxytvWEa5kiE382Rx";
-        Xfers.apiKey = "pK7jy7cKBv5qL_VMULxaZ4hxNm2fpcSrPfz5Vv2nFKk";
+        String xfersAppApiKey = "";
+        String xfersAppSecretKey = "";
+        Xfers.apiKey = "";
 
 
         try {

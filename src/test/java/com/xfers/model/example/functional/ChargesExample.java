@@ -1,4 +1,4 @@
-package com.xfers.model;
+package com.xfers.model.example.functional;
 
 import com.google.gson.Gson;
 import com.xfers.Xfers;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-public class ChargesTest {
+public class ChargesExample {
     public static void main(String[] args) {
         Xfers.apiKey = "WuTp3zM7UEpmUkeAyGPxRHmnXAx-hXJ7jzdqmxY6S1o";
         Xfers.setSGSandbox();

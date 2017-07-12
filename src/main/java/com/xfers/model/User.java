@@ -44,6 +44,33 @@ public class User {
     private String email;
     private String nationality;
 
+    public static Response registerCallback(Map<String, Object> params, String userApiToken)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String url = resourceUrl + "/balance_callback";
+        String response = APIResource.request(APIResource.RequestMethod.POST, url, params, userApiToken);
+        System.out.println(response);
+        Gson gson = new Gson();
+        return gson.fromJson(response, Response.class);
+    }
+
+    public static Response registerCallback(Map<String, Object> params)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        return registerCallback(params,null);
+    }
+
+    public static Response deleteCallback(String userApiToken)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String url = resourceUrl + "/balance_callback";
+        String response = APIResource.request(APIResource.RequestMethod.DELETE, url, null, userApiToken);
+        Gson gson = new Gson();
+        return gson.fromJson(response, Response.class);
+    }
+
+    public static Response deleteCallback()
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        return deleteCallback(null);
+    }
+
     public static User retrieve(String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, null, userApiToken);

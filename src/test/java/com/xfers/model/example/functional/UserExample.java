@@ -1,4 +1,4 @@
-package com.xfers.model;
+package com.xfers.model.example.functional;
 
 import com.xfers.Xfers;
 import com.xfers.model.Activity;
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class UserTest {
+public class UserExample {
     public static void main(String[] args) {
         Xfers.apiKey = "pXcfdAKNorDe_o1eou1NSp4mwssiEzem_6sg8fwnZWs";
         Xfers.setSGSandbox();

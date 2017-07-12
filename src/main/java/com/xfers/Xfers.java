@@ -26,6 +26,10 @@ public class Xfers {
         apiBase = ID_PRODUCTION_API_BASE;
     }
 
+    public static void setEndpoint(String endpoint) {
+        apiBase = endpoint;
+    }
+
     public static String getApiBase() {
         return apiBase;
     }

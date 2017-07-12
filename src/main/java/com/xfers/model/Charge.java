@@ -38,9 +38,9 @@ public class Charge {
     private BigDecimal fees;
     private String status;
 
-    public static List<Charge> listAll(Map<String, Object> params, String connectKey)
+    public static List<Charge> listAll(Map<String, Object> params, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, params, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, params, userApiToken);
         Gson gson = new Gson();
         return new ArrayList<Charge>(Arrays.asList(gson.fromJson(response, Charge[].class)));
     }
@@ -55,10 +55,10 @@ public class Charge {
         return listAll(null, null);
     }
 
-    public static Charge retrieve(String id, String connectKey)
+    public static Charge retrieve(String id, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = resourceUrl + "/" + id;
-        String response = APIResource.request(APIResource.RequestMethod.GET, url, null, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.GET, url, null, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, Charge.class);
     }
@@ -68,9 +68,9 @@ public class Charge {
         return retrieve(id, null);
     }
 
-    public static Charge create(Map<String, Object> params, String connectKey)
+    public static Charge create(Map<String, Object> params, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String response = APIResource.request(APIResource.RequestMethod.POST, resourceUrl, params, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.POST, resourceUrl, params, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, Charge.class);
     }
@@ -80,10 +80,10 @@ public class Charge {
         return create(params, null);
     }
 
-    public static Charge cancel(String id, String connectKey)
+    public static Charge cancel(String id, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = resourceUrl + "/" + id + "/cancel";
-        String response = APIResource.request(APIResource.RequestMethod.POST, url, null, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.POST, url, null, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, Charge.class);
     }
@@ -93,10 +93,10 @@ public class Charge {
         return cancel(id, null);
     }
 
-    public static Charge refund(String id, String connectKey)
+    public static Charge refund(String id, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = resourceUrl + "/" + id + "/refunds";
-        String response = APIResource.request(APIResource.RequestMethod.POST, url, null, connectKey);
+        String response = APIResource.request(APIResource.RequestMethod.POST, url, null, userApiToken);
         Gson gson = new Gson();
         return gson.fromJson(response, Charge.class);
     }
@@ -106,10 +106,10 @@ public class Charge {
         return refund(id, null);
     }
 
-    public static String validate(String transactionId, Map<String, Object> params, String connectKey)
+    public static String validate(String transactionId, Map<String, Object> params, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = resourceUrl + "/" + transactionId + "/validate";
-        String str = APIResource.request(APIResource.RequestMethod.POST, url, params, connectKey);
+        String str = APIResource.request(APIResource.RequestMethod.POST, url, params, userApiToken);
         Gson gson = new Gson();
         Response response = gson.fromJson(str, Response.class);
         return response.getMsg();

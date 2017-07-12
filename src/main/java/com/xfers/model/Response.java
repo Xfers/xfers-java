@@ -14,6 +14,12 @@ public class Response {
     @SerializedName("sign_up_url") private String signUpUrl;
     @SerializedName("return_url") private String returnUrl;
 
+    @SerializedName("callback_url") private String callbackURL;
+    @SerializedName("callback_id") private int callbackId;
+    @SerializedName("name") private String name;
+    @SerializedName("created_at") private String createdAt;
+    @SerializedName("events") private List<String> events;
+
     private Boolean success;
     private String msg;
     private String error;

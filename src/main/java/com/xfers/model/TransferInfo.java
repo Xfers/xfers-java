@@ -3,6 +3,8 @@ package com.xfers.model;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class TransferInfo {
     protected static final String resourceUrl = "/user/transfer_info";
 
@@ -13,6 +15,7 @@ public class TransferInfo {
     @SerializedName("branch_code") private String branchCode;
     @SerializedName("branch_area") private String branchArea;
     @SerializedName("unique_id") private String uniqueId;
+    @SerializedName("transfer_info_array") private List<TransferInfo> transferInfoArray;
 
     public String getBankNameFull() {
         return bankNameFull;
@@ -40,6 +43,10 @@ public class TransferInfo {
 
     public String getUniqueId() {
         return uniqueId;
+    }
+
+    public List<TransferInfo> getTransferInfoArray() {
+        return transferInfoArray;
     }
 
     @Override

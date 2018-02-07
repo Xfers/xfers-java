@@ -24,6 +24,7 @@ public class Charge {
     @SerializedName("receipt_email") private String receiptEmail;
     @SerializedName("total_amount") private String totalAmount;
     @SerializedName("meta_data") private Object metaData;
+    @SerializedName("transfer_info") private Object transferInfo;
 
     private String id;
     private BigDecimal amount;
@@ -214,6 +215,10 @@ public class Charge {
 
     public String getStatus() {
         return status;
+    }
+
+    public Object getTransferInfo() {
+        return transferInfo;
     }
 
     @Override

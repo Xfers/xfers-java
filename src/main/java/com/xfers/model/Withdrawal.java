@@ -15,6 +15,7 @@ public class Withdrawal {
     private Boolean express;
     private String status;
     private String arrival;
+    private String comment;
 
     public String getAccountNo() {
         return accountNo;
@@ -30,6 +31,10 @@ public class Withdrawal {
 
     public BigDecimal getAmount() {
         return amount;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
     public BigDecimal getFees() {

@@ -111,6 +111,22 @@ public class BankAccount {
         return withdraw(bankAccountId, params, null);
     }
 
+    public static Withdrawal retrieveWithdrawalRequest(String id, String userApiToken)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String url = resourceUrl + "/withdrawal_requests/" + id;
+        String response = APIResource.request(APIResource.RequestMethod.GET, url, null, userApiToken);
+        Gson gson = new Gson();
+        return gson.fromJson(response, Withdrawal.class);
+    }
+
+    public static Withdrawal retrieveWithdrawalRequest(String id)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        if (Strings.isNullOrEmpty(id)) {
+            throw new InvalidRequestException("Withdrawal id cannot be empty", 400);
+        }
+        return retrieveWithdrawalRequest(id, null);
+    }
+
     public static List<Withdrawal> withdrawalRequests(String filter, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = resourceUrl + "/withdrawal_requests";

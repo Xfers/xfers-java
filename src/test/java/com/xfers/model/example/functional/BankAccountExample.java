@@ -16,6 +16,15 @@ public class BankAccountExample {
     public static void main(String[] args) throws APIException, UnirestException, AuthenticationException, InvalidRequestException, APIConnectionException {
         Xfers.apiKey = "6BY-yFUzu3jG5vj95PyD5VCGzGZUz9SBauEnhgFB9Ds"; // API Token of demo@xfers.io
         Xfers.setSGSandbox();
+
+        try {
+            System.out.println("Getting a withdrawal request");
+            Withdrawal withdrawalRequest = BankAccount.retrieveWithdrawalRequest("23771");
+            System.out.println(withdrawalRequest.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         List<BankAccount> bankAccounts;
 
         System.out.println("Listing all available xfers Banks");

@@ -60,7 +60,9 @@ public class Withdrawal {
         return failureReason;
     }
 
-    public String getIdempotencyId() { return idempotencyId; }
+    public String getIdempotencyId() {
+        return idempotencyId;
+    }
 
     @Override
     public String toString() {

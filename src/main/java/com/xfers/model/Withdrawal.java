@@ -9,6 +9,7 @@ public class Withdrawal {
     @SerializedName("account_no") private String accountNo;
     @SerializedName("bank_abbrev") private String bankAbbrev;
     @SerializedName("failure_reason") private String failureReason;
+    @SerializedName("idempotency_id") private String idempotencyId;
 
     private String id;
     private BigDecimal amount;
@@ -58,6 +59,7 @@ public class Withdrawal {
         return failureReason;
     }
 
+    public String getIdempotencyId() { return idempotencyId; }
     @Override
     public String toString() {
         Gson gson = new Gson();

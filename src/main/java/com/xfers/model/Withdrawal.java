@@ -1,6 +1,7 @@
 package com.xfers.model;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 import java.math.BigDecimal;
@@ -8,7 +9,9 @@ import java.math.BigDecimal;
 public class Withdrawal {
     @SerializedName("account_no") private String accountNo;
     @SerializedName("bank_abbrev") private String bankAbbrev;
-    @SerializedName("failure_reason") private String failure_reason;
+    @SerializedName("failure_reason") private String failureReason;
+    @SerializedName("idempotency_id") private String idempotencyId;
+    @SerializedName("value_date") private String valueDate;
 
     private String id;
     private BigDecimal amount;
@@ -55,12 +58,20 @@ public class Withdrawal {
     }
 
     public String getFailureReason() {
-        return failure_reason;
+        return failureReason;
+    }
+
+    public String getIdempotencyId() {
+        return idempotencyId;
+    }
+
+    public String getValueDate() {
+        return valueDate;
     }
 
     @Override
     public String toString() {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(this);
     }
 }

@@ -11,6 +11,7 @@ public class Withdrawal {
     @SerializedName("bank_abbrev") private String bankAbbrev;
     @SerializedName("failure_reason") private String failureReason;
     @SerializedName("idempotency_id") private String idempotencyId;
+    @SerializedName("value_date") private String valueDate;
 
     private String id;
     private BigDecimal amount;
@@ -62,6 +63,10 @@ public class Withdrawal {
 
     public String getIdempotencyId() {
         return idempotencyId;
+    }
+
+    public String getValueDate() {
+        return valueDate;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.xfers.model;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
 import java.math.BigDecimal;
@@ -60,9 +61,10 @@ public class Withdrawal {
     }
 
     public String getIdempotencyId() { return idempotencyId; }
+
     @Override
     public String toString() {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         return gson.toJson(this);
     }
 }

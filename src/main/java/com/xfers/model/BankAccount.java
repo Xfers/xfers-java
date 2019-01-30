@@ -145,6 +145,18 @@ public class BankAccount {
         return withdrawalRequests(filter, null);
     }
 
+    public static Withdrawal mockWithdrawalResult(String idempotency_id, String status)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String url = resourceUrl + "/withdrawal_requests/mock_result";
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("idempotency_id", idempotency_id);
+        params.put("status", status);
+
+        String response = APIResource.request(APIResource.RequestMethod.PUT, url, params, null);
+        Gson gson = new Gson();
+        return gson.fromJson(response, Withdrawal.class);
+    }
+
     public String getBankAbbrev() {
         return bankAbbrev;
     }

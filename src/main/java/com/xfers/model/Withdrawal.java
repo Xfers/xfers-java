@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class Withdrawal {
     @SerializedName("account_no") private String accountNo;
     @SerializedName("bank_abbrev") private String bankAbbrev;
-    @SerializedName("failure_reason") private String failure_reason;
+    @SerializedName("failure_reason") private String failureReason;
 
     private String id;
     private BigDecimal amount;
@@ -55,7 +55,7 @@ public class Withdrawal {
     }
 
     public String getFailureReason() {
-        return failure_reason;
+        return failureReason;
     }
 
     @Override

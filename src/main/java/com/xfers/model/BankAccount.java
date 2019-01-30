@@ -152,9 +152,10 @@ public class BankAccount {
         params.put("idempotency_id", idempotency_id);
         params.put("status", status);
 
-        String response = APIResource.request(APIResource.RequestMethod.PUT, url, params, null);
+        String str = APIResource.request(APIResource.RequestMethod.PUT, url, params, null);
         Gson gson = new Gson();
-        return gson.fromJson(response, Withdrawal.class);
+        Response response = gson.fromJson(str, Response.class);
+        return response.getWithdrawalRequest();
     }
 
     public String getBankAbbrev() {

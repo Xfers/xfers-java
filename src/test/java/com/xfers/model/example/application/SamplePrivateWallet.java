@@ -10,10 +10,6 @@ import com.xfers.exception.InvalidRequestException;
 import com.xfers.model.*;
 
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-
-import static com.xfers.model.BankAccount.isBankAvailable;
-import static oracle.jrockit.jfr.events.Bits.intValue;
 
 /**
  * Created by wandersen on 13/6/17.
@@ -127,7 +123,7 @@ public class SamplePrivateWallet {
         System.out.println("The user: " + username + " has this following unpaid transaction:");
         List<TransferInfo> transferInfoArray = seePendingTransaction.getTransferInfoArray();
         for (TransferInfo transferInfo : transferInfoArray) {
-            System.out.println( username + " needs to transfer the following amount: " + intValue(seePendingTransaction.getAmount()) + " of the following bank: " + transferInfo.getBankNameFull() + " to the following account number: " + transferInfo.getBankAccountNo());
+            System.out.println( username + " needs to transfer the following amount: " + seePendingTransaction.getAmount() + " of the following bank: " + transferInfo.getBankNameFull() + " to the following account number: " + transferInfo.getBankAccountNo());
         }
     }
 
@@ -171,7 +167,7 @@ public class SamplePrivateWallet {
 
         List<TransferInfo> transferInfoArray = intent.getTransferInfoArray();
         for (TransferInfo transferInfo : transferInfoArray) {
-            System.out.println("Hi " + username + " please Transfer the following amount: " + intValue(intent.getAmount()) + " of the following bank: " + transferInfo.getBankNameFull() + " to the following account number: " + transferInfo.getBankAccountNo());
+            System.out.println("Hi " + username + " please Transfer the following amount: " + intent.getAmount() + " of the following bank: " + transferInfo.getBankNameFull() + " to the following account number: " + transferInfo.getBankAccountNo());
         }
 
     }

@@ -19,7 +19,7 @@ import java.util.Map;
 public class APIResource {
 
     public enum RequestMethod {
-        GET, POST, PUT, DELETE
+        GET, POST, PUT, DELETE, PATCH
     }
 
     private static String handleResponse(HttpResponse<JsonNode> httpResponse) throws InvalidRequestException, AuthenticationException, APIException {
@@ -93,6 +93,12 @@ public class APIResource {
                 return handleResponse(httpResponse);
             case DELETE:
                 httpResponse = Unirest.delete(url)
+                        .headers(headers)
+                        .fields(params)
+                        .asJson();
+                return handleResponse(httpResponse);
+            case PATCH:
+                httpResponse = Unirest.patch(url)
                         .headers(headers)
                         .fields(params)
                         .asJson();

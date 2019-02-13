@@ -1,14 +1,7 @@
 package com.xfers.model.channeling.loan;
 
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class Customer {
     private String din;
@@ -810,12 +803,5 @@ public class Customer {
 
     public String getBranchcode() {
         return branchcode;
-    }
-
-    public String serialize() {
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        //Type mapType = new TypeToken<Map<String, Object>>(){}.getType();
-        //return gson.fromJson(gson.toJson(this), mapType);
-        return gson.toJson(this);
     }
 }

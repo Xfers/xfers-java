@@ -7,7 +7,13 @@ import com.xfers.exception.APIConnectionException;
 import com.xfers.exception.APIException;
 import com.xfers.exception.AuthenticationException;
 import com.xfers.exception.InvalidRequestException;
+import com.xfers.model.channeling.loan.response.CreateDisbursementResponse;
+import com.xfers.model.channeling.loan.response.GetDisbursementResponse;
+import com.xfers.model.channeling.loan.response.ListDisbursementResponse;
+import com.xfers.model.channeling.loan.response.ListRepaymentResponse;
 import com.xfers.net.APIResource;
+import com.xfers.serializer.SnakeToCamelDeserializer;
+import com.xfers.serializer.YearMonthDateSerializer;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -83,7 +89,7 @@ public class Loan {
             params.put("company_management_data", companyManagement);
         }
 
-        String stringParams = new Gson().toJson(params);
+        String stringParams = YearMonthDateSerializer.create().toJson(params);
 
         String url = loanURL;
         String response = new CustomHTTPConnection().post(url, userApiToken, stringParams);
@@ -97,7 +103,7 @@ public class Loan {
             return "customer_data must be present!";
         }
         if (customer_hash instanceof Customer) {
-            params.put("customer_data", ((Customer)customer_hash).serialize());
+            params.put("customer_data", YearMonthDateSerializer.create().toJson((Customer)customer_hash));
         }
 
         Object collateral_hash = params.get("collateral_data");
@@ -105,7 +111,7 @@ public class Loan {
             return "collateral_data must be present!";
         }
         if (collateral_hash instanceof Collateral) {
-            params.put("collateral_data", ((Collateral)collateral_hash).serialize());
+            params.put("collateral_data", YearMonthDateSerializer.create().toJson((Collateral)collateral_hash));
         }
 
         Object loan_detail_hash = params.get("loan_data");
@@ -113,7 +119,7 @@ public class Loan {
             return "loan_data must be present!";
         }
         if (loan_detail_hash instanceof Detail) {
-            params.put("loan_data", ((Detail)loan_detail_hash).serialize());
+            params.put("loan_data", YearMonthDateSerializer.create().toJson((Detail)loan_detail_hash));
         }
 
         Object installment_hash = params.get("installment_data");
@@ -121,17 +127,38 @@ public class Loan {
             return "installment_data must be present!";
         }
         if (installment_hash instanceof Installment) {
-            params.put("installment_data", ((Installment)installment_hash).serialize());
+            params.put("installment_data", YearMonthDateSerializer.create().toJson((Installment)installment_hash));
         }
 
         Object company_management_hash = params.get("company_management_data");
         if (null != company_management_hash && company_management_hash instanceof CompanyManagement) {
-            params.put("company_management_data", ((CompanyManagement)company_management_hash).serialize());
+            params.put("company_management_data", YearMonthDateSerializer.create().toJson((CompanyManagement)company_management_hash));
         }
 
         String url = loanURL;
         String response = APIResource.request(APIResource.RequestMethod.POST, url, params, userApiToken);
         return response;
+    }
+
+    public CreateDisbursementResponse createDisbursement(Map<String, Object> params, String xfersAppApiKey)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String url = loanURL + "/" + id + "/disbursements";
+        String response = APIResource.request(APIResource.RequestMethod.POST, url, params, xfersAppApiKey);
+        return SnakeToCamelDeserializer.create().fromJson(response, CreateDisbursementResponse.class);
+    }
+
+    public GetDisbursementResponse getDisbursement(String contractID, String userApiToken)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String url = loanURL + "/" + id + "/disbursements/" + contractID;
+        String response = APIResource.request(APIResource.RequestMethod.GET, url, null, userApiToken);
+        return SnakeToCamelDeserializer.create().fromJson(response, GetDisbursementResponse.class);
+    }
+
+    public ListDisbursementResponse getAllDisbursements(String userApiToken)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String url = loanURL + "/" + id + "/disbursements";
+        String response = APIResource.request(APIResource.RequestMethod.GET, url, null, userApiToken);
+        return SnakeToCamelDeserializer.create().fromJson(response, ListDisbursementResponse.class);
     }
 
     private String repaymentURL(String repaymentID) {
@@ -160,18 +187,12 @@ public class Loan {
         return new Gson().fromJson(response, Repayment.class);
     }
 
-    /** This class is a temporary class to help formatting repayments response
-     * which is { repayments: [] } */
-    private class RepaymentList {
-        public List<Repayment> repayments;
-    }
-
-    public List<Repayment> getRepayments(String userApiToken)
+    public List<Repayment> getAllRepayments(String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = repaymentURL(null);
         String response = APIResource.request(APIResource.RequestMethod.GET, url, null, userApiToken);
 
-        return new Gson().fromJson(response, RepaymentList.class).repayments;
+        return new Gson().fromJson(response, ListRepaymentResponse.class).getRepayments();
     }
 
     public static void outstandingLoans(Integer page, Integer perPage, String userApiToken)
@@ -198,7 +219,7 @@ public class Loan {
     }
 
     public static List<Repayment> parseOutstandingRepayments(String response) {
-        return new Gson().fromJson(response, RepaymentList.class).repayments;
+        return new Gson().fromJson(response, ListRepaymentResponse.class).getRepayments();
     }
 
     @Override

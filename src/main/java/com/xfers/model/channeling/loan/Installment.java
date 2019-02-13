@@ -3,9 +3,6 @@ package com.xfers.model.channeling.loan;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 public class Installment {
     private Integer period;
     private Date duedate;
@@ -56,10 +53,5 @@ public class Installment {
 
     public BigDecimal getInstallfee() {
         return installfee;
-    }
-
-    public String serialize() {
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        return gson.toJson(this);
     }
 }

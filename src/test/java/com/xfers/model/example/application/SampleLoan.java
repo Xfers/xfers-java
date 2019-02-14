@@ -37,8 +37,8 @@ public class SampleLoan {
         String xfersAppApiKey = "";
         String xfersAppSecretKey = "";
         String phoneNumber = "";
-        String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber); // Must save user API token
 
+        String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber); // Must save user API token
         exampleKycSubmission(userApiToken);
 
         // Mock verification can only be used in sandbox.

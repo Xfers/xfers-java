@@ -3,9 +3,6 @@ package com.xfers.model.channeling.loan;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 public class Detail {
     private String refno;
     private BigDecimal objectvalue;
@@ -236,10 +233,5 @@ public class Detail {
 
     public BigDecimal getInstallfeeaccount() {
         return installfeeaccount;
-    }
-
-    public String serialize() {
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        return gson.toJson(this);
     }
 }

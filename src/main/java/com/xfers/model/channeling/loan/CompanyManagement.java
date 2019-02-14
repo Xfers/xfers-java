@@ -1,8 +1,5 @@
 package com.xfers.model.channeling.loan;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 public class CompanyManagement {
     private String refnocustid;
     private String name;
@@ -88,10 +85,5 @@ public class CompanyManagement {
 
     public String getSharepct() {
         return sharepct;
-    }
-
-    public String serialize() {
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-        return gson.toJson(this);
     }
 }

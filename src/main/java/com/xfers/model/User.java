@@ -120,6 +120,11 @@ public class User {
         return activities(null);
     }
 
+    public static void mockVerify(String userApiToken)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        APIResource.request(APIResource.RequestMethod.PATCH, resourceUrl + "/verify", null, userApiToken);
+    }
+
     public BigDecimal getAvailableBalance() {
         return availableBalance;
     }

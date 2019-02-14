@@ -177,11 +177,12 @@ public class Loan {
         return url;
     }
 
-    public CreateRepaymentResponse createRepayment(BigDecimal amount, BigDecimal collectionFee, String userApiToken)
+    public CreateRepaymentResponse createRepayment(BigDecimal amount, BigDecimal collectionFee, String idempotencyID, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String,Object>();
         params.put("amount", amount);
         params.put("collection_fee", collectionFee);
+        params.put("idempotency_id", idempotencyID);
         String url = repaymentURL(null);
         String response = APIResource.request(APIResource.RequestMethod.POST, url, params, userApiToken);
         return SnakeToCamelDeserializer.create().fromJson(response, CreateRepaymentResponse.class);

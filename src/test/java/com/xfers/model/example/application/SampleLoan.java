@@ -30,6 +30,7 @@ public class SampleLoan {
     private static String refno = ""; // for creating new loan
     private static String disbursementIdempotencyID = ""; // for creating new disbursement
     private static String payoutInvoiceID = ""; // for creating new payout
+    private static String repaymentIdempotencyID = ""; // for creating new loan repayment
 
     public static void main(String[] args) {
         Xfers.setIDSandbox();
@@ -288,7 +289,7 @@ public class SampleLoan {
         BigDecimal collectionFee = new BigDecimal("0"); // Must be zero
 
         try {
-            CreateRepaymentResponse response = loan.createRepayment(amount, collectionFee, userApiToken);
+            CreateRepaymentResponse response = loan.createRepayment(amount, collectionFee, repaymentIdempotencyID, userApiToken);
             String repaymentID = response.getLoanRepaymentID();
             System.out.println("Repayment ID: " + repaymentID);
             return repaymentID;

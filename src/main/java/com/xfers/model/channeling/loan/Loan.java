@@ -8,6 +8,7 @@ import com.xfers.exception.APIException;
 import com.xfers.exception.AuthenticationException;
 import com.xfers.exception.InvalidRequestException;
 import com.xfers.model.channeling.loan.response.CreateDisbursementResponse;
+import com.xfers.model.channeling.loan.response.CreateRepaymentResponse;
 import com.xfers.model.channeling.loan.response.GetDisbursementResponse;
 import com.xfers.model.channeling.loan.response.ListDisbursementResponse;
 import com.xfers.model.channeling.loan.response.ListRepaymentResponse;
@@ -161,6 +162,13 @@ public class Loan {
         return SnakeToCamelDeserializer.create().fromJson(response, ListDisbursementResponse.class);
     }
 
+    public String createDisbursementReport(String userApiToken)
+            throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        String url = loanURL + "/" + id + "/disbursement_reports";
+        String response = APIResource.request(APIResource.RequestMethod.POST, url, null, userApiToken);
+        return response;
+    }
+
     private String repaymentURL(String repaymentID) {
         String url = loanURL + "/" + id + "/repayments";
         if (null != repaymentID) {
@@ -169,14 +177,14 @@ public class Loan {
         return url;
     }
 
-    public String createRepayment(BigDecimal amount, BigDecimal collectionFee, String userApiToken)
+    public CreateRepaymentResponse createRepayment(BigDecimal amount, BigDecimal collectionFee, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String,Object>();
         params.put("amount", amount);
         params.put("collection_fee", collectionFee);
         String url = repaymentURL(null);
         String response = APIResource.request(APIResource.RequestMethod.POST, url, params, userApiToken);
-        return response;
+        return SnakeToCamelDeserializer.create().fromJson(response, CreateRepaymentResponse.class);
     }
 
     public Repayment getRepayment(String repaymentID, String userApiToken)
@@ -195,23 +203,23 @@ public class Loan {
         return new Gson().fromJson(response, ListRepaymentResponse.class).getRepayments();
     }
 
-    public static void outstandingLoans(Integer page, Integer perPage, String userApiToken)
+    public static void outstandingLoans(Integer page, Integer perPage, String xfersAppApiKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String,Object>();
         params.put("page", page);
         params.put("per_page", perPage);
         String url = loanURL + "/reconciliations";
-        APIResource.request(APIResource.RequestMethod.POST, url, params, userApiToken);
+        APIResource.request(APIResource.RequestMethod.POST, url, params, xfersAppApiKey);
     }
 
-    public static void outstandingLoanRepayments(Date transactionDate, Integer page, Integer perPage, String userApiToken)
+    public static void outstandingLoanRepayments(Date transactionDate, Integer page, Integer perPage, String xfersAppApiKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String,Object>();
         params.put("transaction_date", new SimpleDateFormat("yyyy-MM-dd").format(transactionDate));
         params.put("page", page);
         params.put("per_page", perPage);
-        String url = loanURL + "/reconciliations";
-        APIResource.request(APIResource.RequestMethod.POST, url, params, userApiToken);
+        String url = loanURL + "/repayments/reconciliations";
+        APIResource.request(APIResource.RequestMethod.POST, url, params, xfersAppApiKey);
     }
 
     public static List<Loan> parseOutstandingLoans(String response) {

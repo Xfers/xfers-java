@@ -3,12 +3,12 @@ package com.xfers.model.channeling.loan.response;
 import com.xfers.model.channeling.loan.Disbursement;
 
 public class GetDisbursementResponse {
-    private String loanID;
+    private String loanId;
     private String loanStatus;
     private Disbursement disbursement;
 
     public String getLoanID() {
-        return this.loanID;
+        return this.loanId;
     }
 
     public String getLoanStatus() {

@@ -47,27 +47,34 @@ public class SampleLoan {
 
         String bankAccountID = exampleAddBankAccount(userApiToken);
 
+        /*********************** LOAN DISBURSEMENT FLOW ***********************/
+
         // After create a loan, wait for a period of time for bank validation.
         // Then, get the loan and create a disbursement.
         String loanID = exampleCreateLoan(userApiToken);
         Loan loan = exampleGetLoan(loanID, userApiToken);
 
         Disbursement result = exampleCreateDisbursement(loan, xfersAppApiKey, bankAccountID, userApiToken);
-        try { Thread.sleep(3000); } catch(Exception ex) { } // Wait for a period of time between disbursement creation and mocking disbursement status.
+        try { Thread.sleep(10000); } catch(InterruptedException ex) { } // Wait for a period of time between disbursement creation and mocking disbursement status.
         exampleMockDisbursementStatus(result, userApiToken);
-        try { Thread.sleep(3000); } catch(Exception ex) { } // Wait for a period of time between after disbursement completed before making report.
+        try { Thread.sleep(3000); } catch(InterruptedException ex) { } // Wait for a period of time between after disbursement completed before making report.
         exampleCreateDisbursementReport(loan, userApiToken);
 
         List<Disbursement> disbursements = exampleGetAllDisbursements(loan, userApiToken);
         Disbursement disbursement = exampleGetDisbursement(loan, result.getId(), userApiToken);
 
-        // Payout first before create repayment, should have the same amount.
-        // Make sure to have the balance. (top up first, manually in production, or via https://sandbox-id.xfers.com in sandbox)
-        examplePayout(xfersAppApiKey, userApiToken);
-        String repaymentID = exampleCreateRepayment(loan, userApiToken);
+        /*********************** REPAYMENT FLOW ***********************/
 
+        // Payout first before create repayment, should have the same amount.
+        // Make sure to have the balance in your merchant account.
+        String payoutID = exampleCreatePayout(xfersAppApiKey, userApiToken);
+        Payout payout = exampleGetPayout(payoutID, xfersAppApiKey);
+
+        String repaymentID = exampleCreateRepayment(loan, userApiToken);
         List<Repayment> repayments = exampleGetAllRepayments(loan, userApiToken);
         Repayment repayment = exampleGetRepayment(loan, repaymentID, userApiToken);
+
+        /*********************** RECONCILIATIONS ***********************/
 
         exampleCallOutstandingLoans(xfersAppApiKey);
         exampleCallOutstandingRepayments(xfersAppApiKey);
@@ -249,7 +256,7 @@ public class SampleLoan {
         }
     }
 
-    private static String examplePayout(String xfersAppApiKey, String userApiToken) {
+    private static String exampleCreatePayout(String xfersAppApiKey, String userApiToken) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("amount", "10345");
         params.put("user_api_token", userApiToken);
@@ -267,9 +274,18 @@ public class SampleLoan {
         }
     }
 
+    private static Payout exampleGetPayout(String payoutID, String xfersAppApiKey) {
+        try {
+            return Payout.retrieve(payoutID, xfersAppApiKey);
+        } catch (Exception e) {
+            System.out.println("Get payout error: " + e);
+            return null;
+        }
+    }
+
     private static String exampleCreateRepayment(Loan loan, String userApiToken) {
         BigDecimal amount = new BigDecimal("10000.0");
-        BigDecimal collectionFee = new BigDecimal("25.0");
+        BigDecimal collectionFee = new BigDecimal("0"); // Must be zero
 
         try {
             CreateRepaymentResponse response = loan.createRepayment(amount, collectionFee, userApiToken);

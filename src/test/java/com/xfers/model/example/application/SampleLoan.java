@@ -107,25 +107,33 @@ public class SampleLoan {
      */
     private static void exampleKycSubmission(String userApiToken) {
         Map<String, Object> updateParams = new HashMap<String, Object>();
-        updateParams.put("first_name", "John");
-        updateParams.put("last_name", "Doe");
-        updateParams.put("email", "john@doe.com");
-        updateParams.put("identity_no", "1234567890120001"); // KTP number
-        updateParams.put("id_front", "http://gambar_ktp.jpg"); // Make sure this is a valid image with public access
-        updateParams.put("selfie_2id", "http://gambar_selfie.jpg"); // Make sure this is a valid image with public access
-        updateParams.put("date_of_birth", "2000-02-29"); // All date format is yyyy-mm-dd
-        updateParams.put("gender", "male"); // "male" or "female" only
-        updateParams.put("address_line_1", "Jl. Razhunna Seith");
-        updateParams.put("address_line_2", "Apartemen Saiber Dhua lantai 123");
-        updateParams.put("nric_issue_date", "2017-03-01");
-        updateParams.put("postal_code", "12345");
+
+        // Mandatory basic fields
+        updateParams.put("id_front", "http://gambar_ktp.jpg"); // Make sure all image link fields are valid image with public access
+        updateParams.put("selfie_2id", "http://gambar_selfie.jpg"); // For Tunaikita, this field will be a screen capture of the liveness test
+        updateParams.put("mother_maiden_name", "Jane Doe");
+
+        // Mandatory KTP fields
         updateParams.put("state", "DKI Jakarta");
         updateParams.put("city", "Jakarta Selatan");
-        updateParams.put("mother_maiden_name", "Jane Doe");
+        updateParams.put("identity_no", "1234567890120001"); // KTP number
+        updateParams.put("full_name", "John Doe");
         updateParams.put("place_of_birth", "Bandung");
+        updateParams.put("date_of_birth", "2000-02-29"); // All date format is yyyy-mm-dd
+        updateParams.put("gender", "male"); // "male" or "female" only
+        updateParams.put("blood_type", "-"); // "O", "A", "B", "AB", or "-" only
+        updateParams.put("address_line_1", "Jl. Razhunna Seith");
         updateParams.put("rt_rw", "005/001"); // The format is RT/RW, with or without leading zero
-        updateParams.put("administrative_village", "Setiabudi"); // "kelurahan" in Bahasa Indonesia
+        updateParams.put("administrative_village", "Setiabudi"); // This is taken from field "Kel/Desa" in KTP
         updateParams.put("district", "Setiabudi"); // "kecamatan" in Bahasa Indonesia
+        updateParams.put("religion", "Budha"); // "Islam", "Katholik", "Kristen Protestan", "Hindu", "Budha", "Kong Hu Cu", or "Aliran Kepercayaan" only
+        updateParams.put("marital_status", "Belum Kawin"); // "Belum Kawin", "Kawin", "Janda", or "Duda" only
+        updateParams.put("occupation", "Pelajar/Mahasiswa"); // Put the value from field "Pekerjaan" in KTP as is
+        updateParams.put("nationality", "Indonesian"); // "kewarganegaraan", which should always be "Indonesian"
+        updateParams.put("nric_issue_date", "2017-03-01");
+
+        // Optional KTP field
+        updateParams.put("address_line_2", "Apartemen Saiber Dhua lantai 123");
 
         try {
             User.update(updateParams, userApiToken);

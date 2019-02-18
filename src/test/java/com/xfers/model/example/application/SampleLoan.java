@@ -109,31 +109,31 @@ public class SampleLoan {
         Map<String, Object> updateParams = new HashMap<String, Object>();
 
         // Mandatory basic fields
-        updateParams.put("id_front", "http://gambar_ktp.jpg"); // Make sure all image link fields are valid image with public access
+        updateParams.put("id_front", "http://gambar_ktp.jpg"); // Photo of person's KTP
         updateParams.put("selfie_2id", "http://gambar_selfie.jpg"); // For Tunaikita, this field will be a screen capture of the liveness test
         updateParams.put("mother_maiden_name", "Jane Doe");
 
         // Mandatory KTP fields
-        updateParams.put("state", "DKI Jakarta");
-        updateParams.put("city", "Jakarta Selatan");
-        updateParams.put("identity_no", "1234567890120001"); // KTP number
-        updateParams.put("full_name", "John Doe");
-        updateParams.put("place_of_birth", "Bandung");
-        updateParams.put("date_of_birth", "2000-02-29"); // All date format is yyyy-mm-dd
-        updateParams.put("gender", "male"); // "male" or "female" only
-        updateParams.put("blood_type", "-"); // "O", "A", "B", "AB", or "-" only
-        updateParams.put("address_line_1", "Jl. Razhunna Seith");
-        updateParams.put("rt_rw", "005/001"); // The format is RT/RW, with or without leading zero
-        updateParams.put("administrative_village", "Setiabudi"); // This is taken from field "Kel/Desa" in KTP
-        updateParams.put("district", "Setiabudi"); // "kecamatan" in Bahasa Indonesia
-        updateParams.put("religion", "Budha"); // "Islam", "Katholik", "Kristen Protestan", "Hindu", "Budha", "Kong Hu Cu", or "Aliran Kepercayaan" only
-        updateParams.put("marital_status", "Belum Kawin"); // "Belum Kawin", "Kawin", "Janda", or "Duda" only
-        updateParams.put("occupation", "Pelajar/Mahasiswa"); // Put the value from field "Pekerjaan" in KTP as is
-        updateParams.put("nationality", "Indonesian"); // "kewarganegaraan", which should always be "Indonesian"
-        updateParams.put("nric_issue_date", "2017-03-01");
+        updateParams.put("state", "DKI Jakarta"); // Taken from most top line of KTP, without the word "PROVINSI"
+        updateParams.put("city", "Jakarta Selatan"); // Taken from second line from top of KTP
+        updateParams.put("identity_no", "1234567890120001"); // Taken from KTP "NIK" field
+        updateParams.put("full_name", "John Doe"); // Taken from KTP "Nama" field
+        updateParams.put("place_of_birth", "Bandung"); // Taken from KTP "Tempat" field
+        updateParams.put("date_of_birth", "2000-02-29"); // Taken from KTP "Tgl Lahir" field
+        updateParams.put("gender", "male"); // Taken from KTP "Jenis Kelamin" field; Options are "male" for LAKI-LAKI or "female" for PEREMPUAN only
+        updateParams.put("blood_type", "-"); // Taken from KTP "Gol. Darah" field; Options are "O", "A", "B", "AB", or "-" only
+        updateParams.put("address_line_1", "Jl. Razhunna Seith"); // Taken from KTP "Alamat" field; Also refer to optional address_line_2 field below
+        updateParams.put("rt_rw", "005/001"); // Taken from KTP "RT/RW" field, as is
+        updateParams.put("administrative_village", "Setiabudi"); // Taken from KTP "Kel/Desa" field
+        updateParams.put("district", "Setiabudi"); // Taken from KTP "Kecamatan" field
+        updateParams.put("religion", "Budha"); // Taken from KTP "Agama" field; Options are "Islam", "Katholik", "Kristen Protestan", "Hindu", "Budha", "Kong Hu Cu", or "Aliran Kepercayaan" only
+        updateParams.put("marital_status", "Belum Kawin"); // Taken from KTP "Status Perkawinan" field; Options are "Belum Kawin", "Kawin", "Janda", or "Duda" only
+        updateParams.put("occupation", "Pelajar/Mahasiswa"); // Taken from KTP "Pekerjaan" field, as is
+        updateParams.put("nationality", "Indonesian"); // Should always be "Indonesian"
+        updateParams.put("nric_issue_date", "2017-03-01"); // Taken from the date below KTP photo
 
         // Optional KTP field
-        updateParams.put("address_line_2", "Apartemen Saiber Dhua lantai 123");
+        updateParams.put("address_line_2", "Apartemen Saiber Dhua lantai 123"); // Taken from KTP "Alamat" field if address is more than one line
 
         try {
             User.update(updateParams, userApiToken);

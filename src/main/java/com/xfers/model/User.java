@@ -39,6 +39,7 @@ public class User {
     @SerializedName("date_of_birth") private String dateOfBirth;
     @SerializedName("bank_accounts") private List<BankAccount> bankAccounts;
     @SerializedName("meta_data") private String metaData;
+    @SerializedName("kyc_status") private String kycStatus;
 
     private String country;
     private String email;
@@ -231,6 +232,10 @@ public class User {
 
     public String getMetaData() {
         return metaData;
+    }
+
+    public String getKycStatus() {
+        return kycStatus;
     }
 
     @Override

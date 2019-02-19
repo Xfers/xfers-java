@@ -3,7 +3,6 @@ package com.xfers.model.example.application;
 import com.xfers.Xfers;
 import com.xfers.model.BankAccount;
 import com.xfers.model.Connect;
-import com.xfers.model.Payout;
 import com.xfers.model.Response;
 import com.xfers.model.User;
 import com.xfers.model.channeling.loan.Collateral;
@@ -29,7 +28,6 @@ public class SampleLoan {
     // These values must be unique per create request
     private static String refno = ""; // for creating new loan
     private static String disbursementIdempotencyID = ""; // for creating new disbursement
-    private static String payoutInvoiceID = ""; // for creating new payout
     private static String repaymentIdempotencyID = ""; // for creating new loan repayment
 
     public static void main(String[] args) {
@@ -39,51 +37,64 @@ public class SampleLoan {
         String xfersAppSecretKey = "";
         String phoneNumber = "";
 
-        String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber); // Must save user API token
+        /*********************** USER KYC FLOW ***********************/
+
+        String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber);
+
         exampleKycSubmission(userApiToken);
+        // callback at user_verification_status_updated
+        // exampleCheckKycStatus(userApiToken)
 
         // Mock verification can only be used in sandbox.
-        // In production, the verification is done manually by Xfers KYC team.
         exampleMockVerification(userApiToken, 3);
 
         String bankAccountID = exampleAddBankAccount(userApiToken);
+        // exampleGetBankAccount(userApiToken)
+        // exampleListBankAccounts(userApiToken)
 
         /*********************** LOAN DISBURSEMENT FLOW ***********************/
 
-        // After create a loan, wait for a period of time for bank validation.
-        // Then, get the loan and create a disbursement.
         String loanID = exampleCreateLoan(userApiToken);
+        // callback at loan_request_approved
         Loan loan = exampleGetLoan(loanID, userApiToken);
 
         Disbursement result = exampleCreateDisbursement(loan, xfersAppApiKey, bankAccountID, userApiToken);
-        try { Thread.sleep(10000); } catch(InterruptedException ex) { } // Wait for a period of time between disbursement creation and mocking disbursement status.
-        exampleMockDisbursementStatus(result, userApiToken);
-        try { Thread.sleep(3000); } catch(InterruptedException ex) { } // Wait for a period of time between after disbursement completed before making report.
-        exampleCreateDisbursementReport(loan, userApiToken);
-
+        // callback at withdrawal_completed
         List<Disbursement> disbursements = exampleGetAllDisbursements(loan, userApiToken);
         Disbursement disbursement = exampleGetDisbursement(loan, result.getId(), userApiToken);
 
+        // Wait for a period of time between disbursement creation and mocking disbursement status.
+        try { Thread.sleep(10000); } catch(InterruptedException ex) { }
+
+        exampleMockDisbursementStatus(result, userApiToken);
+
+        // Wait for a period of time between after disbursement completed before making report.
+        try { Thread.sleep(3000); } catch(InterruptedException ex) { }
+
+        exampleCreateDisbursementReport(loan, userApiToken);
+        // callback at loan_disbursement_report_completed
+        loan = exampleGetLoan(loanID, userApiToken);
+
         /*********************** REPAYMENT FLOW ***********************/
 
-        // Payout first before create repayment, should have the same amount.
-        // Make sure to have the balance in your merchant account.
-        String payoutID = exampleCreatePayout(xfersAppApiKey, userApiToken);
-        Payout payout = exampleGetPayout(payoutID, xfersAppApiKey);
-
         String repaymentID = exampleCreateRepayment(loan, userApiToken);
+        // callback at loan_repayment_created
         List<Repayment> repayments = exampleGetAllRepayments(loan, userApiToken);
         Repayment repayment = exampleGetRepayment(loan, repaymentID, userApiToken);
 
         /*********************** RECONCILIATIONS ***********************/
 
         exampleCallOutstandingLoans(xfersAppApiKey);
+        // callback at loan_reconciliation_requested
+
         exampleCallOutstandingRepayments(xfersAppApiKey);
+        // callback at loan_repayment_reconciliations_requested
     }
 
+
     /**
-     * This function is to create a new user and returns its user api token.
-     * For existing users, use their corresponding user api token.
+     * This function is to create a new user and returns its user api token which
+     * will be used to identify the user onward
      */
     private static String exampleSignUp(String xfersAppApiKey, String xfersAppSecretKey, String phoneNumber) {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -100,17 +111,16 @@ public class SampleLoan {
     }
 
     /**
-     * This example contains mandatory fields.
-     * Without the following fields, the following may happen:
-     *      1. The User.update function throw an error.
-     *      2. The corresponding user may be rejected by Xfers KYC team.
+     * Submit KYC data to create Xfers-Sobatku Wallet.
+     * If Approved, a Xfers-Sobatku Wallet will be created for that user.
+     * There will be callback for approval or rejection
      */
     private static void exampleKycSubmission(String userApiToken) {
         Map<String, Object> updateParams = new HashMap<String, Object>();
 
         // Mandatory basic fields
         updateParams.put("id_front", "http://gambar_ktp.jpg"); // Photo of person's KTP
-        updateParams.put("selfie_2id", "http://gambar_selfie.jpg"); // For Tunaikita, this field will be a screen capture of the liveness test
+        updateParams.put("selfie_2id", "http://gambar_selfie.jpg"); // Selfie or screen capture of the liveness test
         updateParams.put("mother_maiden_name", "Jane Doe");
 
         // Mandatory KTP fields
@@ -145,6 +155,8 @@ public class SampleLoan {
 
     /**
      * This function creates a new bank account for corresponding user.
+     * This function also gets the detected name of the user from the bank system and return it to you synchronously
+     * The name provided by you and the bank should be similar (doesn't require exact match)
      * account_holder_name must be "PROD ONLY" for sandbox.
      */
     private static String exampleAddBankAccount(String userApiToken) {
@@ -166,8 +178,9 @@ public class SampleLoan {
     }
 
     /**
-     * This function is to immediately verify the user whose api token in parameter.
-     * Can't be used in production.
+     * This function is to immediately verify the user specified.
+     * In production, the verification is done manually by Xfers KYC team.
+     * Can only be used in sandbox
      */
     private static void exampleMockVerification(String userApiToken, int retries) {
         if (0 >= retries) {
@@ -182,6 +195,11 @@ public class SampleLoan {
         }
     }
 
+    /**
+     * After creating a loan, Partner Bank will do some background checking on the user whether the user
+     * will be eligible for the loan.
+     * After being approved, should create a disbursement to that user.
+     */
     private static String exampleCreateLoan(String userApiToken) {
         Loan loan = new Loan()
             .customer(exampleCustomer())
@@ -199,6 +217,11 @@ public class SampleLoan {
         }
     }
 
+    /**
+     *  Gets a loan.
+     *  The most important parameter here is `status`
+     *  (refer to https://documenter.getpostman.com/view/5775523/RznLFvgh#89762ab3-d4f2-491d-beba-fe90ddf3afd2)
+     */
     private static Loan exampleGetLoan(String loanID, String userApiToken) {
         try {
             return Loan.getLoan(loanID, userApiToken);
@@ -208,6 +231,9 @@ public class SampleLoan {
         }
     }
 
+    /**
+     *  Sends money from your managed account into the user's bank account
+     */
     private static Disbursement exampleCreateDisbursement(Loan loan, String xfersAppApiKey, String bankAccountID, String userApiToken) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("amount", "10345.67");
@@ -227,6 +253,9 @@ public class SampleLoan {
         }
     }
 
+    /**
+     *  List all disbursements that is done for a specific loan
+     */
     private static List<Disbursement> exampleGetAllDisbursements(Loan loan, String userApiToken) {
         try {
             ListDisbursementResponse response = loan.getAllDisbursements(userApiToken);
@@ -237,6 +266,9 @@ public class SampleLoan {
         }
     }
 
+    /**
+     *  Get Status of One Disbursement
+     */
     private static Disbursement exampleGetDisbursement(Loan loan, String contractID, String userApiToken) {
         try {
             GetDisbursementResponse response = loan.getDisbursement(contractID, userApiToken);
@@ -247,6 +279,10 @@ public class SampleLoan {
         }
     }
 
+    /**
+     * This function is to mock whether a status of a disbursement is `completed` or `failed`
+     * Can only be used in sandbox
+     */
     private static void exampleMockDisbursementStatus(Disbursement disbursement, String userApiToken) {
         try {
             disbursement.mockStatusChange("completed", userApiToken);
@@ -256,6 +292,9 @@ public class SampleLoan {
         }
     }
 
+    /**
+     *  Notify Partner Bank that a disbursement is completed to complete the loan disbursement process
+     */
     private static void exampleCreateDisbursementReport(Loan loan, String userApiToken) {
         try {
             loan.createDisbursementReport(userApiToken);
@@ -265,36 +304,12 @@ public class SampleLoan {
         }
     }
 
-    private static String exampleCreatePayout(String xfersAppApiKey, String userApiToken) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("amount", "10345");
-        params.put("user_api_token", userApiToken);
-        params.put("invoice_id", payoutInvoiceID);
-        params.put("descriptions", "For loan");
-
-        try {
-            Payout payout = Payout.create(params, xfersAppApiKey);
-            String payoutID = payout.getId();
-            System.out.println("Payout ID: " + payoutID);
-            return payoutID;
-        } catch (Exception e) {
-            System.out.println("Create payout error: " + e);
-            return null;
-        }
-    }
-
-    private static Payout exampleGetPayout(String payoutID, String xfersAppApiKey) {
-        try {
-            return Payout.retrieve(payoutID, xfersAppApiKey);
-        } catch (Exception e) {
-            System.out.println("Get payout error: " + e);
-            return null;
-        }
-    }
-
+    /**
+     *  Create a repayment notification to Partnering Bank to tell that a user has done a repayment to the loan
+     */
     private static String exampleCreateRepayment(Loan loan, String userApiToken) {
         BigDecimal amount = new BigDecimal("10000.0");
-        BigDecimal collectionFee = new BigDecimal("0"); // Must be zero
+        BigDecimal collectionFee = new BigDecimal("0"); // Should be zero
 
         try {
             CreateRepaymentResponse response = loan.createRepayment(amount, collectionFee, repaymentIdempotencyID, userApiToken);
@@ -307,6 +322,9 @@ public class SampleLoan {
         }
     }
 
+    /**
+     *  List all repayments that is done for a specific loan
+     */
     private static List<Repayment> exampleGetAllRepayments(Loan loan, String userApiToken) {
         try {
             return loan.getAllRepayments(userApiToken);
@@ -316,6 +334,9 @@ public class SampleLoan {
         }
     }
 
+    /**
+     *  Get Status of One Disbursement
+     */
     private static Repayment exampleGetRepayment(Loan loan, String repaymentID, String userApiToken) {
         try {
             return loan.getRepayment(repaymentID, userApiToken);
@@ -325,6 +346,10 @@ public class SampleLoan {
         }
     }
 
+    /**
+     *  Get Outstanding Loans From Partnering Bank.
+     *  This will be used for reconciliation purpose
+     */
     private static void exampleCallOutstandingLoans(String xfersAppApiKey) {
         try {
             Loan.outstandingLoans(1, 100000, xfersAppApiKey);
@@ -334,6 +359,10 @@ public class SampleLoan {
         }
     }
 
+    /**
+     *  Get Outstanding Repayment From Partnering Bank of a given date.
+     *  This will be used for reconciliation purpose
+     */
     private static void exampleCallOutstandingRepayments(String xfersAppApiKey) {
         try {
             Loan.outstandingLoanRepayments(parseDate("2019-1-21"), 1, 100000, xfersAppApiKey);
@@ -354,8 +383,7 @@ public class SampleLoan {
 
     /**
      * This example contains mandatory fields.
-     * Without the following fields, the create function will throw an error.
-     * The same with exampleCollateral, exampleLoanDetail, and exampleInstallment.
+     * Without the following fields, the loan creation function will throw an error.
      */
     private static Customer exampleCustomer() {
         return new Customer()
@@ -405,6 +433,10 @@ public class SampleLoan {
             .lasteducation("0100");
     }
 
+    /**
+     * This example contains mandatory fields.
+     * Without the following fields, the loan creation function will throw an error.
+     */
     private static Collateral exampleCollateral() {
         return new Collateral()
             .productcode("C304")
@@ -430,6 +462,10 @@ public class SampleLoan {
             .dealercode("TK");
     }
 
+    /**
+     * This example contains mandatory fields.
+     * Without the following fields, the loan creation function will throw an error.
+     */
     private static Detail exampleLoanDetail() {
         return new Detail()
             .refno(refno)
@@ -457,6 +493,10 @@ public class SampleLoan {
             .installfeeaccount(new BigDecimal("50000.0"));
     }
 
+    /**
+     * This example contains mandatory fields.
+     * Without the following fields, the loan creation function will throw an error.
+     */
     private static Installment exampleInstallment() {
         return new Installment()
             .duedate(parseDate("2019-04-01"))

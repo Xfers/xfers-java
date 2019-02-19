@@ -138,7 +138,6 @@ public class SampleLoan {
         updateParams.put("marital_status", "Belum Kawin"); // Taken from KTP "Status Perkawinan" field; Options are "Belum Kawin", "Kawin", "Janda", or "Duda" only
         updateParams.put("occupation", "Pelajar/Mahasiswa"); // Taken from KTP "Pekerjaan" field, as is
         updateParams.put("nationality", "Indonesian"); // Should always be "Indonesian"
-        updateParams.put("nric_issue_date", "2017-03-01"); // Taken from the date below KTP photo
 
         // Optional KTP field
         updateParams.put("address_line_2", "Apartemen Saiber Dhua lantai 123"); // Taken from KTP "Alamat" field if address is more than one line

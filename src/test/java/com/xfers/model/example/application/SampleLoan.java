@@ -75,8 +75,6 @@ public class SampleLoan {
         loan = exampleGetLoan(loanID, userApiToken);
 
         /*********************** REPAYMENT FLOW ***********************/
-
-        // Payout first before create repayment, should have the same amount.
         // Make sure to have the balance in your merchant account.
 
         String repaymentID = exampleCreateRepayment(loan, userApiToken);

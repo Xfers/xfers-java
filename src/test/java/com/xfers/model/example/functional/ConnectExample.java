@@ -3,6 +3,7 @@ package com.xfers.model.example.functional;
 import com.xfers.Xfers;
 import com.xfers.model.Connect;
 import com.xfers.model.Response;
+import com.xfers.model.response.ConnectResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,24 +21,20 @@ public class ConnectExample {
 
         try {
             System.out.println("Authorizing");
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("phone_no", "+6597288608");
-            params.put("signature", "a4f001729fe3accdbb0d9cfaf3b49b0678a4c91b");
-            Response response = Connect.authorize(params, xfersAppApiKey, xfersSecretApiKey);
-            System.out.println(response.getMsg());
+            String phoneNumber = "+6597288608";
+            String message = Connect.authorize(phoneNumber, xfersAppApiKey, xfersSecretApiKey);
+            System.out.println(message);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
             System.out.println("Getting token");
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("otp", "541231");
-            params.put("phone_no", "+6597288608");
-            params.put("signature", "132e60cc2b6076824fac1ac4c1bb6b47cc3f9036");
-            params.put("return_url", "https://mywebsite.com/api/v3/account_registration/completed");
-            Response response = Connect.getToken(params, xfersAppApiKey, xfersSecretApiKey);
-            System.out.println(response.getMsg());
+            String phoneNumber = "+6597288608";
+            String OTP = "541231";
+            String returnURL = "https://mywebsite.com/api/v3/account_registration/completed";
+            ConnectResponse response = Connect.getToken(phoneNumber, OTP, returnURL, xfersAppApiKey, xfersSecretApiKey);
+            System.out.println(response.getMessage());
             System.out.println(response.getUserApiToken());
             System.out.println(response.getSignUpUrl());
         } catch (Exception e) {
@@ -46,11 +43,9 @@ public class ConnectExample {
 
         try {
             System.out.println("Authorizing");
-            Map<String, Object> params = new HashMap<String, Object>();
-            params.put("phone_no", "+6597288608");
-            params.put("signature", "a4f001729fe3accdbb0d9cfaf3b49b0678a4c91b");
-            Response response = Connect.privateAuthorize(params, xfersAppApiKey, xfersSecretApiKey);
-            System.out.println(response.getMsg());
+            String phoneNumber = "+6597288608";
+            ConnectResponse response = Connect.privateAuthorize(phoneNumber, xfersAppApiKey, xfersSecretApiKey);
+            System.out.println(response.getMessage());
             System.out.println(response.getUserApiToken());
         } catch (Exception e) {
             e.printStackTrace();

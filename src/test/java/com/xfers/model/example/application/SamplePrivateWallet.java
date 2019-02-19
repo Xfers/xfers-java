@@ -1,6 +1,5 @@
 package com.xfers.model.example.application;
 
-import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.xfers.Xfers;
 import com.xfers.exception.APIConnectionException;
@@ -8,6 +7,7 @@ import com.xfers.exception.APIException;
 import com.xfers.exception.AuthenticationException;
 import com.xfers.exception.InvalidRequestException;
 import com.xfers.model.*;
+import com.xfers.model.response.ConnectResponse;
 
 import java.util.*;
 
@@ -176,9 +176,7 @@ public class SamplePrivateWallet {
         // start of the sign up process
         // this function should only be called once per user
         System.out.println("Authorizing");
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("phone_no", phoneNumber); // this is a required field
-        Response response = Connect.privateAuthorize(params, xfersAppApiKey, xfersAppSecretKey);
+        ConnectResponse response = Connect.privateAuthorize(phoneNumber, xfersAppApiKey, xfersAppSecretKey);
         String userApiToken = response.getUserApiToken(); // save this value in database!
 
 

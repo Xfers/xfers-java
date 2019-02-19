@@ -62,7 +62,7 @@ public class Connect {
         params.put("phone_no", phoneNumber);
         params.put("signature", getSignature(phoneNumber, secretKey));
 
-        String url = resourceUrl + "/signup_login";
+        String url = resourceUrl + "/private_wallet";
         String response = APIResource.requestConnect(APIResource.RequestMethod.POST, url, params, appKey);
         return SnakeToCamelDeserializer.create().fromJson(response, ConnectResponse.class);
     }

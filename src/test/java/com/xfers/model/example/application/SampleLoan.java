@@ -41,25 +41,21 @@ public class SampleLoan {
 
         String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber);
 
-        exampleKycSubmission(userApiToken);
-        // callback at user_verification_status_updated
-        // exampleCheckKycStatus(userApiToken)
+        exampleKycSubmission(userApiToken); // callback at user_verification_status_updated
+        exampleCheckKycStatus(userApiToken);
 
         // Mock verification can only be used in sandbox.
         exampleMockVerification(userApiToken, 3);
 
         String bankAccountID = exampleAddBankAccount(userApiToken);
-        // exampleGetBankAccount(userApiToken)
-        // exampleListBankAccounts(userApiToken)
+        List<BankAccount> bankAccounts = exampleListBankAccounts(userApiToken);
 
         /*********************** LOAN DISBURSEMENT FLOW ***********************/
 
-        String loanID = exampleCreateLoan(userApiToken);
-        // callback at loan_request_approved
+        String loanID = exampleCreateLoan(userApiToken); // callback at loan_request_approved
         Loan loan = exampleGetLoan(loanID, userApiToken);
 
-        Disbursement result = exampleCreateDisbursement(loan, xfersAppApiKey, bankAccountID, userApiToken);
-        // callback at withdrawal_completed
+        Disbursement result = exampleCreateDisbursement(loan, xfersAppApiKey, bankAccountID, userApiToken); // callback at withdrawal_completed
         List<Disbursement> disbursements = exampleGetAllDisbursements(loan, userApiToken);
         Disbursement disbursement = exampleGetDisbursement(loan, result.getId(), userApiToken);
 
@@ -71,30 +67,25 @@ public class SampleLoan {
         // Wait for a period of time between after disbursement completed before making report.
         try { Thread.sleep(3000); } catch(InterruptedException ex) { }
 
-        exampleCreateDisbursementReport(loan, userApiToken);
-        // callback at loan_disbursement_report_completed
+        exampleCreateDisbursementReport(loan, userApiToken); // callback at loan_disbursement_report_completed
         loan = exampleGetLoan(loanID, userApiToken);
 
         /*********************** REPAYMENT FLOW ***********************/
 
-        String repaymentID = exampleCreateRepayment(loan, userApiToken);
-        // callback at loan_repayment_created
+        String repaymentID = exampleCreateRepayment(loan, userApiToken); // callback at loan_repayment_created
         List<Repayment> repayments = exampleGetAllRepayments(loan, userApiToken);
         Repayment repayment = exampleGetRepayment(loan, repaymentID, userApiToken);
 
         /*********************** RECONCILIATIONS ***********************/
 
-        exampleCallOutstandingLoans(xfersAppApiKey);
-        // callback at loan_reconciliation_requested
-
-        exampleCallOutstandingRepayments(xfersAppApiKey);
-        // callback at loan_repayment_reconciliations_requested
+        exampleCallOutstandingLoans(xfersAppApiKey); // callback at loan_reconciliation_requested
+        exampleCallOutstandingRepayments(xfersAppApiKey); // callback at loan_repayment_reconciliations_requested
     }
 
 
     /**
      * This function is to create a new user and returns its user api token which
-     * will be used to identify the user onward
+     * will be used to identify the user onward.
      */
     private static String exampleSignUp(String xfersAppApiKey, String xfersAppSecretKey, String phoneNumber) {
         try {
@@ -111,7 +102,7 @@ public class SampleLoan {
     /**
      * Submit KYC data to create Xfers-Sobatku Wallet.
      * If Approved, a Xfers-Sobatku Wallet will be created for that user.
-     * There will be callback for approval or rejection
+     * There will be callback for approval or rejection.
      */
     private static void exampleKycSubmission(String userApiToken) {
         Map<String, Object> updateParams = new HashMap<String, Object>();
@@ -151,10 +142,19 @@ public class SampleLoan {
         }
     }
 
+    private static void exampleCheckKycStatus(String userApiToken) {
+        try {
+            User user = User.retrieve(userApiToken);
+            System.out.println("User kyc status is " + user.getKycStatus());
+        } catch(Exception e) {
+            System.out.println("Kyc status check error: " + e);
+        }
+    }
+
     /**
      * This function creates a new bank account for corresponding user.
-     * This function also gets the detected name of the user from the bank system and return it to you synchronously
-     * The name provided by you and the bank should be similar (doesn't require exact match)
+     * This function also gets the detected name of the user from the bank system and return it to you synchronously.
+     * The name provided by you and the bank should be similar (doesn't require exact match).
      * account_holder_name must be "PROD ONLY" for sandbox.
      */
     private static String exampleAddBankAccount(String userApiToken) {
@@ -175,10 +175,19 @@ public class SampleLoan {
         }
     }
 
+    private static List<BankAccount> exampleListBankAccounts(String userApiToken) {
+        try {
+            return BankAccount.retrieve(userApiToken);
+        } catch (Exception e) {
+            System.out.println("Get all bank accounts error: " + e);
+            return null;
+        }
+    }
+
     /**
      * This function is to immediately verify the user specified.
      * In production, the verification is done manually by Xfers KYC team.
-     * Can only be used in sandbox
+     * Can only be used in sandbox.
      */
     private static void exampleMockVerification(String userApiToken, int retries) {
         if (0 >= retries) {
@@ -230,7 +239,7 @@ public class SampleLoan {
     }
 
     /**
-     *  Sends money from your managed account into the user's bank account
+     *  Sends money from your managed account into the user's bank account.
      */
     private static Disbursement exampleCreateDisbursement(Loan loan, String xfersAppApiKey, String bankAccountID, String userApiToken) {
         Map<String, Object> params = new HashMap<String, Object>();
@@ -252,7 +261,7 @@ public class SampleLoan {
     }
 
     /**
-     *  List all disbursements that is done for a specific loan
+     *  List all disbursements that is done for a specific loan.
      */
     private static List<Disbursement> exampleGetAllDisbursements(Loan loan, String userApiToken) {
         try {
@@ -265,7 +274,7 @@ public class SampleLoan {
     }
 
     /**
-     *  Get Status of One Disbursement
+     *  Get status of one disbursement.
      */
     private static Disbursement exampleGetDisbursement(Loan loan, String contractID, String userApiToken) {
         try {
@@ -278,8 +287,8 @@ public class SampleLoan {
     }
 
     /**
-     * This function is to mock whether a status of a disbursement is `completed` or `failed`
-     * Can only be used in sandbox
+     * This function is to mock whether a status of a disbursement is `completed` or `failed`.
+     * Can only be used in sandbox.
      */
     private static void exampleMockDisbursementStatus(Disbursement disbursement, String userApiToken) {
         try {
@@ -291,7 +300,7 @@ public class SampleLoan {
     }
 
     /**
-     *  Notify Partner Bank that a disbursement is completed to complete the loan disbursement process
+     *  Notify partner bank that a disbursement is completed to complete the loan disbursement process.
      */
     private static void exampleCreateDisbursementReport(Loan loan, String userApiToken) {
         try {
@@ -303,11 +312,11 @@ public class SampleLoan {
     }
 
     /**
-     *  Create a repayment notification to Partnering Bank to tell that a user has done a repayment to the loan
+     *  Create a repayment notification to partnering bank to tell that a user has done a repayment to the loan.
      */
     private static String exampleCreateRepayment(Loan loan, String userApiToken) {
         BigDecimal amount = new BigDecimal("10000.0");
-        BigDecimal collectionFee = new BigDecimal("0"); // Should be zero
+        BigDecimal collectionFee = new BigDecimal("0"); // should be zero
 
         try {
             CreateRepaymentResponse response = loan.createRepayment(amount, collectionFee, repaymentIdempotencyID, userApiToken);
@@ -321,7 +330,7 @@ public class SampleLoan {
     }
 
     /**
-     *  List all repayments that is done for a specific loan
+     *  List all repayments that is done for a specific loan.
      */
     private static List<Repayment> exampleGetAllRepayments(Loan loan, String userApiToken) {
         try {
@@ -333,7 +342,7 @@ public class SampleLoan {
     }
 
     /**
-     *  Get Status of One Disbursement
+     *  Get status of one repayment.
      */
     private static Repayment exampleGetRepayment(Loan loan, String repaymentID, String userApiToken) {
         try {
@@ -345,8 +354,8 @@ public class SampleLoan {
     }
 
     /**
-     *  Get Outstanding Loans From Partnering Bank.
-     *  This will be used for reconciliation purpose
+     *  Get outstanding loans from partnering bank.
+     *  This will be used for reconciliation purpose.
      */
     private static void exampleCallOutstandingLoans(String xfersAppApiKey) {
         try {
@@ -358,8 +367,8 @@ public class SampleLoan {
     }
 
     /**
-     *  Get Outstanding Repayment From Partnering Bank of a given date.
-     *  This will be used for reconciliation purpose
+     *  Get outstanding repayment from partnering bank of a given date.
+     *  This will be used for reconciliation purpose.
      */
     private static void exampleCallOutstandingRepayments(String xfersAppApiKey) {
         try {

@@ -3,7 +3,6 @@ package com.xfers.model.example.application;
 import com.xfers.Xfers;
 import com.xfers.model.BankAccount;
 import com.xfers.model.Connect;
-import com.xfers.model.Payout;
 import com.xfers.model.Response;
 import com.xfers.model.User;
 import com.xfers.model.channeling.loan.Collateral;
@@ -64,22 +63,22 @@ public class SampleLoan {
         List<Disbursement> disbursements = exampleGetAllDisbursements(loan, userApiToken);
         Disbursement disbursement = exampleGetDisbursement(loan, result.getId(), userApiToken);
 
-        try { Thread.sleep(10000); } catch(InterruptedException ex) { } // Wait for a period of time between disbursement creation and mocking disbursement status.
+        // Wait for a period of time between disbursement creation and mocking disbursement status.
+        try { Thread.sleep(10000); } catch(InterruptedException ex) { }
 
         exampleMockDisbursementStatus(result, userApiToken);
 
-        try { Thread.sleep(3000); } catch(InterruptedException ex) { } // Wait for a period of time between after disbursement completed before making report.
+        // Wait for a period of time between after disbursement completed before making report.
+        try { Thread.sleep(3000); } catch(InterruptedException ex) { }
 
         exampleCreateDisbursementReport(loan, userApiToken);
         // callback at loan_disbursement_report_completed
         loan = exampleGetLoan(loanID, userApiToken);
 
         /*********************** REPAYMENT FLOW ***********************/
-        // Make sure to have the balance in your merchant account.
 
         String repaymentID = exampleCreateRepayment(loan, userApiToken);
         // callback at loan_repayment_created
-
         List<Repayment> repayments = exampleGetAllRepayments(loan, userApiToken);
         Repayment repayment = exampleGetRepayment(loan, repaymentID, userApiToken);
 
@@ -112,8 +111,8 @@ public class SampleLoan {
     }
 
     /**
-     * Submit KYC data to Xfers to create Sobatku Wallet.
-     * If Approved, a Sobatku Wallet will be created for that user.
+     * Submit KYC data to create Xfers-Sobatku Wallet.
+     * If Approved, a Xfers-Sobatku Wallet will be created for that user.
      * There will be callback for approval or rejection
      */
     private static void exampleKycSubmission(String userApiToken) {
@@ -156,6 +155,8 @@ public class SampleLoan {
 
     /**
      * This function creates a new bank account for corresponding user.
+     * This function also gets the detected name of the user from the bank system and return it to you synchronously
+     * The name provided by you and the bank should be similar (doesn't require exact match)
      * account_holder_name must be "PROD ONLY" for sandbox.
      */
     private static String exampleAddBankAccount(String userApiToken) {
@@ -195,8 +196,9 @@ public class SampleLoan {
     }
 
     /**
-     * After create a loan, wait for a period of time for bank validation.
-     * Then, get the loan and create a disbursement.
+     * After creating a loan, Partner Bank will do some background checking on the user whether the user
+     * will be eligible for the loan.
+     * After being approved, should create a disbursement to that user.
      */
     private static String exampleCreateLoan(String userApiToken) {
         Loan loan = new Loan()
@@ -216,7 +218,7 @@ public class SampleLoan {
     }
 
     /**
-     *  Gets a loan object from Xfers Server.
+     *  Gets a loan.
      *  The most important parameter here is `status`
      *  (refer to https://documenter.getpostman.com/view/5775523/RznLFvgh#89762ab3-d4f2-491d-beba-fe90ddf3afd2)
      */

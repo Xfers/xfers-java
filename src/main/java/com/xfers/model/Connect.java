@@ -1,54 +1,70 @@
 package com.xfers.model;
 
-import com.google.gson.Gson;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.xfers.exception.APIConnectionException;
 import com.xfers.exception.APIException;
 import com.xfers.exception.AuthenticationException;
 import com.xfers.exception.InvalidRequestException;
+import com.xfers.model.response.ConnectResponse;
 import com.xfers.net.APIResource;
+import com.xfers.serializer.SnakeToCamelDeserializer;
+
 import org.apache.commons.codec.digest.DigestUtils;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class Connect {
     private static final String resourceUrl = "/authorize";
 
-    public static Response getToken(Map<String, Object> params, String appKey, String secretKey)
+    /**
+     * After user receives the OTP SMS, merchant's app should capture the OTP and pass it to Xfers via this API.
+     * @return An instance of ConnectResponse, which contains the user's unique ID and user's API KEY.
+     * @param returnURL Optional parameter, fill with a null value if not needed.
+     */
+    public static ConnectResponse getToken(String phoneNumber, String OTP, String returnURL, String appKey, String secretKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("phone_no", phoneNumber);
+        params.put("otp", OTP);
+        params.put("signature", getSignature(phoneNumber, secretKey, OTP));
+        if (null != returnURL) {
+            params.put("return_url", returnURL);
+        }
+
         String url = resourceUrl + "/get_token";
-        String phoneNumber = (String) params.get("phone_no");
-        String OTP = (String) params.get("otp");
-
-        params.put("signature", getSignature(phoneNumber, secretKey, OTP) );
-
         String response = APIResource.requestConnect(APIResource.RequestMethod.GET, url, params, appKey);
-        Gson gson = new Gson();
-        return gson.fromJson(response, Response.class);
+        return SnakeToCamelDeserializer.create().fromJson(response, ConnectResponse.class);
     }
 
-    public static Response authorize(Map<String, Object> params, String appKey, String secretKey)
+    /**
+     * Register a new user and send an OTP to the phone number in parameter.
+     * @return A message whether it is success or not.
+     */
+    public static String authorize(String phoneNumber, String appKey, String secretKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("phone_no", phoneNumber);
+        params.put("signature", getSignature(phoneNumber, secretKey));
 
         String url = resourceUrl + "/signup_login";
-        String phoneNumber = (String) params.get("phone_no");
-        params.put("signature", getSignature(phoneNumber, secretKey) );
         String response = APIResource.requestConnect(APIResource.RequestMethod.POST, url, params, appKey);
-        Gson gson = new Gson();
-        return gson.fromJson(response, Response.class);
-
+        return SnakeToCamelDeserializer.create().fromJson(response, ConnectResponse.class).getMessage();
     }
 
-    public static Response privateAuthorize (Map<String, Object> params, String appKey, String secretKey)
+    /**
+     * Register a new user without the need of OTP or get the user API KEY.
+     * @return An instance of ConnectResponse, which contains the user's unique ID and user's API KEY. Ignore SignUpURL and WalletName.
+     */
+    public static ConnectResponse privateAuthorize(String phoneNumber, String appKey, String secretKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("phone_no", phoneNumber);
+        params.put("signature", getSignature(phoneNumber, secretKey));
 
         String url = resourceUrl + "/private_wallet";
-        String phoneNumber = (String) params.get("phone_no");
-        params.put("signature", getSignature(phoneNumber, secretKey) );
         String response = APIResource.requestConnect(APIResource.RequestMethod.POST, url, params, appKey);
-        Gson gson = new Gson();
-        return gson.fromJson(response, Response.class);
-
+        return SnakeToCamelDeserializer.create().fromJson(response, ConnectResponse.class);
     }
 
     public static String validate_phone(String phoneNumber)

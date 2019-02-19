@@ -3,7 +3,6 @@ package com.xfers.model.example.application;
 import com.xfers.Xfers;
 import com.xfers.model.BankAccount;
 import com.xfers.model.Connect;
-import com.xfers.model.Response;
 import com.xfers.model.User;
 import com.xfers.model.channeling.loan.Collateral;
 import com.xfers.model.channeling.loan.Customer;
@@ -16,6 +15,7 @@ import com.xfers.model.channeling.loan.response.CreateDisbursementResponse;
 import com.xfers.model.channeling.loan.response.CreateRepaymentResponse;
 import com.xfers.model.channeling.loan.response.GetDisbursementResponse;
 import com.xfers.model.channeling.loan.response.ListDisbursementResponse;
+import com.xfers.model.response.ConnectResponse;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -97,13 +97,11 @@ public class SampleLoan {
      * will be used to identify the user onward
      */
     private static String exampleSignUp(String xfersAppApiKey, String xfersAppSecretKey, String phoneNumber) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("phone_no", phoneNumber);
         try {
-            Response response = Connect.privateAuthorize(params, xfersAppApiKey, xfersAppSecretKey);
-            String userApiToken = response.getUserApiToken();
-            System.out.println("User API Token: " + userApiToken);
-            return userApiToken;
+            ConnectResponse response = Connect.privateAuthorize(phoneNumber, xfersAppApiKey, xfersAppSecretKey);
+            System.out.println("User API Token: " + response.getUserApiToken());
+            System.out.println("User ID: " + response.getId());
+            return response.getUserApiToken();
         } catch (Exception e) {
             System.out.println("Sign up error: " + e);
             return null;

@@ -8,6 +8,7 @@ public class ConnectResponse {
     private String signUpUrl;
     private String walletName;
     private Boolean isFullyVerified;
+    private String otpProvided;
 
     public String getMessage() {
         return this.msg;
@@ -35,5 +36,9 @@ public class ConnectResponse {
 
     public Boolean isFullyVerified() {
         return this.isFullyVerified;
+    }
+
+    public String getOtpProvided() {
+        return this.otpProvided;
     }
 }

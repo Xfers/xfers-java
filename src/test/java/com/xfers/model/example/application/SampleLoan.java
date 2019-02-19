@@ -41,7 +41,8 @@ public class SampleLoan {
 
         String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber);
 
-        exampleKycSubmission(userApiToken); // callback at user_verification_status_updated
+        exampleKycSubmission(userApiToken);
+        // callback at user_verification_status_updated
         exampleCheckKycStatus(userApiToken);
 
         // Mock verification can only be used in sandbox.
@@ -52,10 +53,12 @@ public class SampleLoan {
 
         /*********************** LOAN DISBURSEMENT FLOW ***********************/
 
-        String loanID = exampleCreateLoan(userApiToken); // callback at loan_request_approved
+        String loanID = exampleCreateLoan(userApiToken);
+        // callback at loan_request_approved
         Loan loan = exampleGetLoan(loanID, userApiToken);
 
-        Disbursement result = exampleCreateDisbursement(loan, xfersAppApiKey, bankAccountID, userApiToken); // callback at withdrawal_completed
+        Disbursement result = exampleCreateDisbursement(loan, xfersAppApiKey, bankAccountID, userApiToken);
+        // callback at withdrawal_completed
         List<Disbursement> disbursements = exampleGetAllDisbursements(loan, userApiToken);
         Disbursement disbursement = exampleGetDisbursement(loan, result.getId(), userApiToken);
 
@@ -67,19 +70,23 @@ public class SampleLoan {
         // Wait for a period of time between after disbursement completed before making report.
         try { Thread.sleep(3000); } catch(InterruptedException ex) { }
 
-        exampleCreateDisbursementReport(loan, userApiToken); // callback at loan_disbursement_report_completed
+        exampleCreateDisbursementReport(loan, userApiToken);
+        // callback at loan_disbursement_report_completed
         loan = exampleGetLoan(loanID, userApiToken);
 
         /*********************** REPAYMENT FLOW ***********************/
 
-        String repaymentID = exampleCreateRepayment(loan, userApiToken); // callback at loan_repayment_created
+        String repaymentID = exampleCreateRepayment(loan, userApiToken);
+        // callback at loan_repayment_created
         List<Repayment> repayments = exampleGetAllRepayments(loan, userApiToken);
         Repayment repayment = exampleGetRepayment(loan, repaymentID, userApiToken);
 
         /*********************** RECONCILIATIONS ***********************/
 
-        exampleCallOutstandingLoans(xfersAppApiKey); // callback at loan_reconciliation_requested
-        exampleCallOutstandingRepayments(xfersAppApiKey); // callback at loan_repayment_reconciliations_requested
+        exampleCallOutstandingLoans(xfersAppApiKey);
+        // callback at loan_reconciliation_requested
+        exampleCallOutstandingRepayments(xfersAppApiKey);
+        // callback at loan_repayment_reconciliations_requested
     }
 
 

@@ -1,10 +1,15 @@
 package com.xfers.model.channeling.loan.response;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 public class CreateRepaymentResponse {
     private String loanId;
     private String loanRepaymentId;
-    private Boolean success;
-    private String notes;
+    private String status;
+    private BigDecimal amount;
+    private BigDecimal collectionFee;
+    private Date createdAt;
 
     public String getLoanID() {
         return this.loanId;
@@ -14,15 +19,19 @@ public class CreateRepaymentResponse {
         return this.loanRepaymentId;
     }
 
-    public Boolean getSuccess() {
-        return this.success;
+    public String getStatus() {
+        return this.status;
     }
 
-    public Boolean isSuccess() {
-        return this.success;
+    public BigDecimal getAmount() {
+        return this.amount;
     }
 
-    public String getNotes() {
-        return this.notes;
+    public BigDecimal getCollectionFee() {
+        return this.collectionFee;
+    }
+
+    public Date getCreatedAt() {
+        return this.createdAt;
     }
 }

@@ -128,10 +128,9 @@ public class SampleLoan {
         updateParams.put("place_of_birth", "Bandung"); // Taken from KTP "Tempat" field
         updateParams.put("date_of_birth", "2000-02-29"); // Taken from KTP "Tgl Lahir" field
         updateParams.put("gender", "male"); // Taken from KTP "Jenis Kelamin" field; Options are "male" for LAKI-LAKI or "female" for PEREMPUAN only
-        updateParams.put("address_line_1", "Jl. Razhunna Seith"); // Taken from KTP "Alamat" field; Also refer to optional address_line_2 field below
+        updateParams.put("address_line_1", "Jl. Razhunna Seith"); // Taken from KTP "Alamat" field
         updateParams.put("marital_status", "Belum Kawin"); // Taken from KTP "Status Perkawinan" field; Options are "Belum Kawin", "Kawin", "Janda", or "Duda" only
         updateParams.put("occupation", "Pelajar/Mahasiswa"); // Taken from KTP "Pekerjaan" field, as is
-
 
         try {
             User.update(updateParams, userApiToken);

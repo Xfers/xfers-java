@@ -44,7 +44,7 @@ public class Disbursement {
         return this.id;
     }
 
-    public String getIdempotencyID() {
+    public String getIdempotencyId() {
         return this.idempotencyId;
     }
 

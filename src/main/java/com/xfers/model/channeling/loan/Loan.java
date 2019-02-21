@@ -38,6 +38,17 @@ public class Loan {
     @SerializedName("loan_data") private Detail detail;
     @SerializedName("installment_data") private Installment installment;
 
+    public Loan() { }
+
+    /**
+     * Instantiate an empty loan object with only ID.
+     * This constructor do nothing other than set the initial loan ID.
+     * Useful for creating or getting repayments or disbursements.
+     */
+    public Loan(String id) {
+        this.id = id;
+    }
+
     public Loan collateral(Collateral collateral) {
         this.collateral = collateral;
         return this;
@@ -148,9 +159,9 @@ public class Loan {
         return SnakeToCamelDeserializer.create().fromJson(response, CreateDisbursementResponse.class);
     }
 
-    public GetDisbursementResponse getDisbursement(String contractID, String userApiToken)
+    public GetDisbursementResponse getDisbursement(String contractId, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String url = loanURL + "/" + id + "/disbursements/" + contractID;
+        String url = loanURL + "/" + id + "/disbursements/" + contractId;
         String response = APIResource.request(APIResource.RequestMethod.GET, url, null, userApiToken);
         return SnakeToCamelDeserializer.create().fromJson(response, GetDisbursementResponse.class);
     }
@@ -169,28 +180,28 @@ public class Loan {
         return response;
     }
 
-    private String repaymentURL(String repaymentID) {
+    private String repaymentURL(String repaymentId) {
         String url = loanURL + "/" + id + "/repayments";
-        if (null != repaymentID) {
-            url += "/" + repaymentID;
+        if (null != repaymentId) {
+            url += "/" + repaymentId;
         }
         return url;
     }
 
-    public CreateRepaymentResponse createRepayment(BigDecimal amount, BigDecimal collectionFee, String idempotencyID, String userApiToken)
+    public CreateRepaymentResponse createRepayment(BigDecimal amount, BigDecimal collectionFee, String idempotencyId, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String,Object>();
         params.put("amount", amount);
         params.put("collection_fee", collectionFee);
-        params.put("idempotency_id", idempotencyID);
+        params.put("idempotency_id", idempotencyId);
         String url = repaymentURL(null);
         String response = APIResource.request(APIResource.RequestMethod.POST, url, params, userApiToken);
         return SnakeToCamelDeserializer.create().fromJson(response, CreateRepaymentResponse.class);
     }
 
-    public Repayment getRepayment(String repaymentID, String userApiToken)
+    public Repayment getRepayment(String repaymentId, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
-        String url = repaymentURL(repaymentID);
+        String url = repaymentURL(repaymentId);
         String response = APIResource.request(APIResource.RequestMethod.GET, url, null, userApiToken);
 
         return new Gson().fromJson(response, Repayment.class);
@@ -235,6 +246,11 @@ public class Loan {
     public String toString() {
         Gson gson = new Gson();
         return gson.toJson(this);
+    }
+
+    public Loan setId(String id) {
+        this.id = id;
+        return this;
     }
 
     public String getId() {

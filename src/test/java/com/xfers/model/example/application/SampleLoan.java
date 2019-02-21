@@ -41,7 +41,7 @@ public class SampleLoan {
 
         String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber);
 
-        // If userApiToken is null, then it means user sign up is failed.
+        // If userApiToken is null, then it means user sign up failed.
         // No need to do subsequent process for nobody.
         if (null == userApiToken) {
             return;

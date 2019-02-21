@@ -81,7 +81,7 @@ public class SampleLoan {
         // callback at withdrawal_completed
 
         // If disbursement result is null, then it means disbursement creation failed.
-        // If disbursement creation is failed, then no repayment is needed.
+        // If disbursement creation failed, then no repayment is needed.
         if (null == disbursementResult) {
             return;
         }

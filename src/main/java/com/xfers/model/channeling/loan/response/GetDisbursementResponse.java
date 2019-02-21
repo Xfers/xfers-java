@@ -7,7 +7,7 @@ public class GetDisbursementResponse {
     private String loanStatus;
     private Disbursement disbursement;
 
-    public String getLoanID() {
+    public String getLoanId() {
         return this.loanId;
     }
 

@@ -5,14 +5,14 @@ import java.math.BigDecimal;
 import com.xfers.model.channeling.loan.Disbursement;
 
 public class CreateDisbursementResponse {
-    private String loanID;
+    private String loanId;
     private String loanStatus;
     private BigDecimal availableBalance;
     private BigDecimal ledgerBalance;
     private Disbursement disbursement;
 
-    public String getLoanID() {
-        return this.loanID;
+    public String getLoanId() {
+        return this.loanId;
     }
 
     public String getLoanStatus() {

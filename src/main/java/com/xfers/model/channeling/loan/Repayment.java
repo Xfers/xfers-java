@@ -25,6 +25,14 @@ public class Repayment {
     private BigDecimal totaloverdueandpenalty;
     private String failurereason;
 
+    /**
+     * This function shouldn't be called. It is used only in deserializing CreateRepaymentResponse.
+     */
+    public Repayment setId(String id) {
+        this.id = id;
+        return this;
+    }
+
     public String getId() {
         return id;
     }

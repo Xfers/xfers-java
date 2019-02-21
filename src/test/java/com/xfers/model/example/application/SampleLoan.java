@@ -40,12 +40,6 @@ public class SampleLoan {
 
         String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber);
 
-        // If userApiToken is null, then it means user sign up failed.
-        // Unnecessary to further process a user that does not exist.
-        if (null == userApiToken) {
-            return;
-        }
-
         exampleKycSubmission(userApiToken);
         // callback at user_verification_status_updated
         exampleCheckKycStatus(userApiToken);
@@ -56,34 +50,15 @@ public class SampleLoan {
         String bankAccountId = exampleAddBankAccount(userApiToken);
         List<BankAccount> bankAccounts = exampleListBankAccounts(userApiToken);
 
-        // If bankAccountId is null, then it means bank account creation failed.
-        // If the bank account is not created, the disbursement processes can't be done.
-        // If the disbursement process can't be done, there is no point in creating loan.
-        if (null == bankAccountId) {
-            return;
-        }
-
         /*********************** LOAN DISBURSEMENT FLOW ***********************/
 
         String loanId = exampleCreateLoan(userApiToken);
-
-        // If loanId is null, then it means loan creation is failed.
-        // If the loan is not created, the disbursement cannot be done
-        if (null == loanId) {
-            return;
-        }
 
         // callback at loan_request_approved
         Loan loan = exampleGetLoan(loanId, userApiToken);
 
         Disbursement disbursementResult = exampleCreateDisbursement(loan, xfersAppApiKey, bankAccountId, userApiToken);
         // callback at withdrawal_completed
-
-        // If disbursement result is null, then it means disbursement creation failed.
-        // If disbursement creation failed, then no repayment is needed.
-        if (null == disbursementResult) {
-            return;
-        }
 
         Disbursement disbursement = exampleGetDisbursement(loan, disbursementResult.getId(), userApiToken);
         List<Disbursement> disbursements = exampleGetAllDisbursements(loan, userApiToken);
@@ -104,10 +79,7 @@ public class SampleLoan {
         String repaymentId = exampleCreateRepayment(loan, userApiToken);
         // callback at loan_repayment_created
 
-        // If repaymentId is null, then it means repayment creation failed.
-        if (null != repaymentId) {
-            RepaymentResponse repayment = exampleGetRepayment(loan, repaymentId, userApiToken);
-        }
+        RepaymentResponse repayment = exampleGetRepayment(loan, repaymentId, userApiToken);
         List<RepaymentResponse> repayments = exampleGetAllRepayments(loan, userApiToken);
 
         /*********************** RECONCILIATIONS ***********************/

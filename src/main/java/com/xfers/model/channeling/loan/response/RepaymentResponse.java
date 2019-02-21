@@ -5,7 +5,7 @@ import java.util.Date;
 
 import com.xfers.model.channeling.loan.Repayment;
 
-public class CreateRepaymentResponse {
+public class RepaymentResponse {
     private String id;
     private String loanId;
     private String status;

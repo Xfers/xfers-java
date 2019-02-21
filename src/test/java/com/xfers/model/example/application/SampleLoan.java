@@ -10,11 +10,10 @@ import com.xfers.model.channeling.loan.Detail;
 import com.xfers.model.channeling.loan.Disbursement;
 import com.xfers.model.channeling.loan.Installment;
 import com.xfers.model.channeling.loan.Loan;
-import com.xfers.model.channeling.loan.Repayment;
 import com.xfers.model.channeling.loan.response.CreateDisbursementResponse;
-import com.xfers.model.channeling.loan.response.CreateRepaymentResponse;
 import com.xfers.model.channeling.loan.response.GetDisbursementResponse;
 import com.xfers.model.channeling.loan.response.ListDisbursementResponse;
+import com.xfers.model.channeling.loan.response.RepaymentResponse;
 import com.xfers.model.response.ConnectResponse;
 
 import java.math.BigDecimal;
@@ -99,7 +98,6 @@ public class SampleLoan {
 
         exampleCreateDisbursementReport(loan, userApiToken);
         // callback at loan_disbursement_report_completed
-        loan = exampleGetLoan(loanId, userApiToken);
 
         /*********************** REPAYMENT FLOW ***********************/
 
@@ -108,9 +106,9 @@ public class SampleLoan {
 
         // If repaymentId is null, then it means repayment creation failed.
         if (null != repaymentId) {
-            Repayment repayment = exampleGetRepayment(loan, repaymentId, userApiToken);
+            RepaymentResponse repayment = exampleGetRepayment(loan, repaymentId, userApiToken);
         }
-        List<Repayment> repayments = exampleGetAllRepayments(loan, userApiToken);
+        List<RepaymentResponse> repayments = exampleGetAllRepayments(loan, userApiToken);
 
         /*********************** RECONCILIATIONS ***********************/
 
@@ -348,7 +346,7 @@ public class SampleLoan {
         BigDecimal collectionFee = new BigDecimal("0"); // should be zero
 
         try {
-            CreateRepaymentResponse response = loan.createRepayment(amount, collectionFee, repaymentIdempotencyId, userApiToken);
+            RepaymentResponse response = loan.createRepayment(amount, collectionFee, repaymentIdempotencyId, userApiToken);
             String repaymentId = response.getLoanRepaymentId();
             System.out.println("Repayment ID: " + repaymentId);
             return repaymentId;
@@ -361,7 +359,7 @@ public class SampleLoan {
     /**
      *  List all repayments that is done for a specific loan.
      */
-    private static List<Repayment> exampleGetAllRepayments(Loan loan, String userApiToken) {
+    private static List<RepaymentResponse> exampleGetAllRepayments(Loan loan, String userApiToken) {
         try {
             return loan.getAllRepayments(userApiToken);
         } catch (Exception e) {
@@ -373,7 +371,7 @@ public class SampleLoan {
     /**
      *  Get status of one repayment.
      */
-    private static Repayment exampleGetRepayment(Loan loan, String repaymentID, String userApiToken) {
+    private static RepaymentResponse exampleGetRepayment(Loan loan, String repaymentID, String userApiToken) {
         try {
             return loan.getRepayment(repaymentID, userApiToken);
         } catch (Exception e) {

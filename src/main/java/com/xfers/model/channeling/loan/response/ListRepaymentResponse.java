@@ -2,12 +2,10 @@ package com.xfers.model.channeling.loan.response;
 
 import java.util.List;
 
-import com.xfers.model.channeling.loan.Repayment;
-
 public class ListRepaymentResponse {
-    private List<Repayment> repayments;
+    private List<RepaymentResponse> repayments;
     
-    public List<Repayment> getRepayments() {
+    public List<RepaymentResponse> getRepayments() {
         return this.repayments;
     }
 }

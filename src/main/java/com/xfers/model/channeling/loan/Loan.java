@@ -8,10 +8,10 @@ import com.xfers.exception.APIException;
 import com.xfers.exception.AuthenticationException;
 import com.xfers.exception.InvalidRequestException;
 import com.xfers.model.channeling.loan.response.CreateDisbursementResponse;
-import com.xfers.model.channeling.loan.response.CreateRepaymentResponse;
 import com.xfers.model.channeling.loan.response.GetDisbursementResponse;
 import com.xfers.model.channeling.loan.response.ListDisbursementResponse;
 import com.xfers.model.channeling.loan.response.ListRepaymentResponse;
+import com.xfers.model.channeling.loan.response.RepaymentResponse;
 import com.xfers.net.APIResource;
 import com.xfers.serializer.SnakeToCamelDeserializer;
 import com.xfers.serializer.YearMonthDateSerializer;
@@ -188,7 +188,7 @@ public class Loan {
         return url;
     }
 
-    public CreateRepaymentResponse createRepayment(BigDecimal amount, BigDecimal collectionFee, String idempotencyId, String userApiToken)
+    public RepaymentResponse createRepayment(BigDecimal amount, BigDecimal collectionFee, String idempotencyId, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String,Object>();
         params.put("amount", amount);
@@ -196,23 +196,23 @@ public class Loan {
         params.put("idempotency_id", idempotencyId);
         String url = repaymentURL(null);
         String response = APIResource.request(APIResource.RequestMethod.POST, url, params, userApiToken);
-        return SnakeToCamelDeserializer.create().fromJson(response, CreateRepaymentResponse.class);
+        return SnakeToCamelDeserializer.create().fromJson(response, RepaymentResponse.class);
     }
 
-    public Repayment getRepayment(String repaymentId, String userApiToken)
+    public RepaymentResponse getRepayment(String repaymentId, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = repaymentURL(repaymentId);
         String response = APIResource.request(APIResource.RequestMethod.GET, url, null, userApiToken);
 
-        return new Gson().fromJson(response, Repayment.class);
+        return SnakeToCamelDeserializer.create().fromJson(response, RepaymentResponse.class);
     }
 
-    public List<Repayment> getAllRepayments(String userApiToken)
+    public List<RepaymentResponse> getAllRepayments(String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String url = repaymentURL(null);
         String response = APIResource.request(APIResource.RequestMethod.GET, url, null, userApiToken);
 
-        return new Gson().fromJson(response, ListRepaymentResponse.class).getRepayments();
+        return SnakeToCamelDeserializer.create().fromJson(response, ListRepaymentResponse.class).getRepayments();
     }
 
     public static void outstandingLoans(Integer page, Integer perPage, String xfersAppApiKey)
@@ -232,14 +232,6 @@ public class Loan {
         params.put("per_page", perPage);
         String url = loanURL + "/repayments/reconciliations";
         APIResource.request(APIResource.RequestMethod.POST, url, params, xfersAppApiKey);
-    }
-
-    public static List<Loan> parseOutstandingLoans(String response) {
-        return Arrays.asList(new Gson().fromJson(response, Loan[].class));
-    }
-
-    public static List<Repayment> parseOutstandingRepayments(String response) {
-        return new Gson().fromJson(response, ListRepaymentResponse.class).getRepayments();
     }
 
     @Override

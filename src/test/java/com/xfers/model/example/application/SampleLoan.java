@@ -28,14 +28,21 @@ public class SampleLoan {
     private static String refno = ""; // for creating new loan
     private static String disbursementIdempotencyId = ""; // for creating new disbursement
     private static String repaymentIdempotencyId = ""; // for creating new loan repayment
-
+    
+    /**
+    * This sample code show cases the step required to request a loan > 
+    * check the status of the loan > if approved create a disbursement to the end user
+    **/
     public static void main(String[] args) {
         Xfers.setIDSandbox();
 
         String xfersAppApiKey = "";
         String xfersAppSecretKey = "";
         String phoneNumber = "";
-
+        
+        // Step 1, need to verify user first to comply with regulation. 
+        // After that you can chose to add the user's bank account tag to the user as show case
+        // in this example.
         /*********************** USER KYC FLOW ***********************/
 
         String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber);
@@ -50,6 +57,10 @@ public class SampleLoan {
         String bankAccountId = exampleAddBankAccount(userApiToken);
         List<BankAccount> bankAccounts = exampleListBankAccounts(userApiToken);
 
+        // Step 2, create a loan. There's a need to check whether the loan can be approved 
+        // first by the bank after the loan creation.
+        // after the loan has been approved, disbursement can be made and then finally
+        // we have to notify the bank that the loan has been disbursed. 
         /*********************** LOAN DISBURSEMENT FLOW ***********************/
 
         String loanId = exampleCreateLoan(userApiToken);
@@ -73,7 +84,10 @@ public class SampleLoan {
 
         exampleCreateDisbursementReport(loan, userApiToken);
         // callback at loan_disbursement_report_completed
-
+        
+        
+        // Step 3: this showcases how a loan can be repaid. Calling the repayment function
+        // will auto deduct from the user's wallet to be paid back to the bank.
         /*********************** REPAYMENT FLOW ***********************/
 
         String repaymentId = exampleCreateRepayment(loan, userApiToken);
@@ -82,6 +96,7 @@ public class SampleLoan {
         RepaymentResponse repayment = exampleGetRepayment(loan, repaymentId, userApiToken);
         List<RepaymentResponse> repayments = exampleGetAllRepayments(loan, userApiToken);
 
+        // These are helper functions to check on outstanding loans for finance dept reconciliation.
         /*********************** RECONCILIATIONS ***********************/
 
         exampleCallOutstandingLoans(xfersAppApiKey);

@@ -24,11 +24,11 @@ import java.util.List;
 import java.util.Map;
 
 public class SampleLoan {
-    // These values must be unique per create request
+    // These values must be unique per its respective create request.
     private static String refno = ""; // for creating new loan
     private static String disbursementIdempotencyId = ""; // for creating new disbursement
     private static String repaymentIdempotencyId = ""; // for creating new loan repayment
-    
+
     /**
     * This sample code show cases the step required to request a loan > 
     * check the status of the loan > if approved create a disbursement to the end user
@@ -39,13 +39,20 @@ public class SampleLoan {
         String xfersAppApiKey = "";
         String xfersAppSecretKey = "";
         String phoneNumber = "";
-        
-        // Step 1, need to verify user first to comply with regulation. 
-        // After that you can chose to add the user's bank account tag to the user as show case
-        // in this example.
+
+
+        // Step 1: create and verify user.
+        // Need to verify user first to comply with regulation. 
+        // After that you can choose to add the user's bank account tag to the user as show case in this example.
         /*********************** USER KYC FLOW ***********************/
 
         String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber);
+
+        // If userApiToken is null, then it means user sign up failed.
+        // Unnecessary to further process a user that does not exist.
+        if (null == userApiToken) {
+            return;
+        }
 
         exampleKycSubmission(userApiToken);
         // callback at user_verification_status_updated
@@ -57,19 +64,39 @@ public class SampleLoan {
         String bankAccountId = exampleAddBankAccount(userApiToken);
         List<BankAccount> bankAccounts = exampleListBankAccounts(userApiToken);
 
-        // Step 2, create a loan. There's a need to check whether the loan can be approved 
-        // first by the bank after the loan creation.
-        // after the loan has been approved, disbursement can be made and then finally
-        // we have to notify the bank that the loan has been disbursed. 
+        // If bankAccountId is null, then it means bank account creation failed.
+        // If the bank account is not created, the disbursement processes can't be done.
+        // If the disbursement process can't be done, there is no point in creating loan.
+        if (null == bankAccountId) {
+            return;
+        }
+
+
+        // Step 2: create a loan.
+        // There's a need to check whether the loan can be approved first by the bank after the loan creation.
+        // After the loan has been approved, disbursement can be made.
+        // Finally, we have to notify the bank that the loan has been disbursed. 
         /*********************** LOAN DISBURSEMENT FLOW ***********************/
 
         String loanId = exampleCreateLoan(userApiToken);
+
+        // If loanId is null, then it means loan creation is failed.
+        // If the loan is not created, the disbursement cannot be done
+        if (null == loanId) {
+            return;
+        }
 
         // callback at loan_request_approved
         Loan loan = exampleGetLoan(loanId, userApiToken);
 
         Disbursement disbursementResult = exampleCreateDisbursement(loan, xfersAppApiKey, bankAccountId, userApiToken);
         // callback at withdrawal_completed
+
+        // If disbursement result is null, then it means disbursement creation failed.
+        // If disbursement creation failed, then no repayment is needed.
+        if (null == disbursementResult) {
+            return;
+        }
 
         Disbursement disbursement = exampleGetDisbursement(loan, disbursementResult.getId(), userApiToken);
         List<Disbursement> disbursements = exampleGetAllDisbursements(loan, userApiToken);
@@ -84,19 +111,23 @@ public class SampleLoan {
 
         exampleCreateDisbursementReport(loan, userApiToken);
         // callback at loan_disbursement_report_completed
-        
-        
-        // Step 3: this showcases how a loan can be repaid. Calling the repayment function
-        // will auto deduct from the user's wallet to be paid back to the bank.
+
+
+        // Step 3: repay the loan.
+        // Calling the repayment function will auto deduct from the user's wallet to be paid back to the bank.
         /*********************** REPAYMENT FLOW ***********************/
 
         String repaymentId = exampleCreateRepayment(loan, userApiToken);
         // callback at loan_repayment_created
 
-        RepaymentResponse repayment = exampleGetRepayment(loan, repaymentId, userApiToken);
+        // If repaymentId is null, then it means repayment creation failed.
+        if (null != repaymentId) {
+            RepaymentResponse repayment = exampleGetRepayment(loan, repaymentId, userApiToken);
+        }
         List<RepaymentResponse> repayments = exampleGetAllRepayments(loan, userApiToken);
 
-        // These are helper functions to check on outstanding loans for finance dept reconciliation.
+
+        // These are helper functions to check on outstanding loans for finance department reconciliation.
         /*********************** RECONCILIATIONS ***********************/
 
         exampleCallOutstandingLoans(xfersAppApiKey);
@@ -527,3 +558,4 @@ public class SampleLoan {
             .period(6);
     }
 }
+

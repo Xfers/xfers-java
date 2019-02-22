@@ -10,10 +10,11 @@ import com.xfers.model.channeling.loan.Detail;
 import com.xfers.model.channeling.loan.Disbursement;
 import com.xfers.model.channeling.loan.Installment;
 import com.xfers.model.channeling.loan.Loan;
+import com.xfers.model.channeling.loan.Repayment;
 import com.xfers.model.channeling.loan.response.CreateDisbursementResponse;
+import com.xfers.model.channeling.loan.response.CreateRepaymentResponse;
 import com.xfers.model.channeling.loan.response.GetDisbursementResponse;
 import com.xfers.model.channeling.loan.response.ListDisbursementResponse;
-import com.xfers.model.channeling.loan.response.RepaymentResponse;
 import com.xfers.model.response.ConnectResponse;
 
 import java.math.BigDecimal;
@@ -26,9 +27,14 @@ import java.util.Map;
 public class SampleLoan {
     // These values must be unique per create request
     private static String refno = ""; // for creating new loan
-    private static String disbursementIdempotencyId = ""; // for creating new disbursement
-    private static String repaymentIdempotencyId = ""; // for creating new loan repayment
+    private static String disbursementIdempotencyID = ""; // for creating new disbursement
+    private static String repaymentIdempotencyID = ""; // for creating new loan repayment
 
+
+    /**
+    * This sample code show cases the step required to request a loan > 
+    * check the status of the loan > if approved create a disbursement to the end user
+    **/
     public static void main(String[] args) {
         Xfers.setIDSandbox();
 
@@ -36,6 +42,9 @@ public class SampleLoan {
         String xfersAppSecretKey = "";
         String phoneNumber = "";
 
+        // Step 1, need to verify user first to comply with regulation. 
+        // After that you can chose to add the user's bank account tag to the user as show case
+        // in this example.
         /*********************** USER KYC FLOW ***********************/
 
         String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber);
@@ -47,41 +56,47 @@ public class SampleLoan {
         // Mock verification can only be used in sandbox.
         exampleMockVerification(userApiToken, 3);
 
-        String bankAccountId = exampleAddBankAccount(userApiToken);
+        String bankAccountID = exampleAddBankAccount(userApiToken);
         List<BankAccount> bankAccounts = exampleListBankAccounts(userApiToken);
 
+
+        // Step 2, create a loan. There's a need to check whether the loan can be approved 
+        // first by the bank after the loan creation.
+        // after the loan has been approved, disbursement can be made and then finally
+        // we have to notify the bank that the loan has been disbursed. 
         /*********************** LOAN DISBURSEMENT FLOW ***********************/
 
-        String loanId = exampleCreateLoan(userApiToken);
-
+        String loanID = exampleCreateLoan(userApiToken);
         // callback at loan_request_approved
-        Loan loan = exampleGetLoan(loanId, userApiToken);
+        Loan loan = exampleGetLoan(loanID, userApiToken);
 
-        Disbursement disbursementResult = exampleCreateDisbursement(loan, xfersAppApiKey, bankAccountId, userApiToken);
+        Disbursement result = exampleCreateDisbursement(loan, xfersAppApiKey, bankAccountID, userApiToken);
         // callback at withdrawal_completed
-
-        Disbursement disbursement = exampleGetDisbursement(loan, disbursementResult.getId(), userApiToken);
         List<Disbursement> disbursements = exampleGetAllDisbursements(loan, userApiToken);
+        Disbursement disbursement = exampleGetDisbursement(loan, result.getId(), userApiToken);
 
         // Wait for a period of time between disbursement creation and mocking disbursement status.
         try { Thread.sleep(10000); } catch(InterruptedException ex) { }
 
-        exampleMockDisbursementStatus(disbursementResult, userApiToken);
+        exampleMockDisbursementStatus(result, userApiToken);
 
         // Wait for a period of time between after disbursement completed before making report.
         try { Thread.sleep(3000); } catch(InterruptedException ex) { }
 
         exampleCreateDisbursementReport(loan, userApiToken);
         // callback at loan_disbursement_report_completed
+        loan = exampleGetLoan(loanID, userApiToken);
 
+        // Step 3: this showcases how a loan can be repaid. Calling the repayment function
+        // will auto deduct from the user's wallet to be paid back to the bank.
         /*********************** REPAYMENT FLOW ***********************/
 
-        String repaymentId = exampleCreateRepayment(loan, userApiToken);
+        String repaymentID = exampleCreateRepayment(loan, userApiToken);
         // callback at loan_repayment_created
+        List<Repayment> repayments = exampleGetAllRepayments(loan, userApiToken);
+        Repayment repayment = exampleGetRepayment(loan, repaymentID, userApiToken);
 
-        RepaymentResponse repayment = exampleGetRepayment(loan, repaymentId, userApiToken);
-        List<RepaymentResponse> repayments = exampleGetAllRepayments(loan, userApiToken);
-
+        // These are helper functions to check on outstanding loans for finance dept reconciliation.
         /*********************** RECONCILIATIONS ***********************/
 
         exampleCallOutstandingLoans(xfersAppApiKey);
@@ -129,9 +144,10 @@ public class SampleLoan {
         updateParams.put("place_of_birth", "Bandung"); // Taken from KTP "Tempat" field
         updateParams.put("date_of_birth", "2000-02-29"); // Taken from KTP "Tgl Lahir" field
         updateParams.put("gender", "male"); // Taken from KTP "Jenis Kelamin" field; Options are "male" for LAKI-LAKI or "female" for PEREMPUAN only
-        updateParams.put("address_line_1", "Jl. Razhunna Seith"); // Taken from KTP "Alamat" field
+        updateParams.put("address_line_1", "Jl. Razhunna Seith"); // Taken from KTP "Alamat" field; Also refer to optional address_line_2 field below
         updateParams.put("marital_status", "Belum Kawin"); // Taken from KTP "Status Perkawinan" field; Options are "Belum Kawin", "Kawin", "Janda", or "Duda" only
         updateParams.put("occupation", "Pelajar/Mahasiswa"); // Taken from KTP "Pekerjaan" field, as is
+
 
         try {
             User.update(updateParams, userApiToken);
@@ -165,9 +181,9 @@ public class SampleLoan {
         try {
             List<BankAccount> bankAccounts = BankAccount.add(params, userApiToken);
             BankAccount newAccount = bankAccounts.get(bankAccounts.size() - 1);
-            String bankId = newAccount.getId();
-            System.out.println("Bank ID: " + bankId);
-            return bankId;
+            String bankID = newAccount.getId();
+            System.out.println("Bank ID: " + bankID);
+            return bankID;
         } catch (Exception e) {
             System.out.println("Add bank account error: " + e);
             return "";
@@ -214,9 +230,9 @@ public class SampleLoan {
             .installment(exampleInstallment());
         try {
             String result = loan.create(userApiToken);
-            String loanId = Loan.fromJSON(result).getId();
-            System.out.println("Loan ID: " + loanId);
-            return loanId;
+            String loanID = Loan.fromJSON(result).getId();
+            System.out.println("Loan ID: " + loanID);
+            return loanID;
         } catch (Exception e) {
             System.out.println("Create loan error: " + e);
             return null;
@@ -228,9 +244,9 @@ public class SampleLoan {
      *  The most important parameter here is `status`
      *  (refer to https://documenter.getpostman.com/view/5775523/RznLFvgh#89762ab3-d4f2-491d-beba-fe90ddf3afd2)
      */
-    private static Loan exampleGetLoan(String loanId, String userApiToken) {
+    private static Loan exampleGetLoan(String loanID, String userApiToken) {
         try {
-            return Loan.getLoan(loanId, userApiToken);
+            return Loan.getLoan(loanID, userApiToken);
         } catch (Exception e) {
             System.out.println("Get loan error: " + e);
             return null;
@@ -240,18 +256,18 @@ public class SampleLoan {
     /**
      *  Sends money from your managed account into the user's bank account.
      */
-    private static Disbursement exampleCreateDisbursement(Loan loan, String xfersAppApiKey, String bankAccountId, String userApiToken) {
+    private static Disbursement exampleCreateDisbursement(Loan loan, String xfersAppApiKey, String bankAccountID, String userApiToken) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("amount", "10345.67");
         params.put("user_api_token", userApiToken);
-        params.put("idempotency_id", disbursementIdempotencyId);
-        params.put("bank_account_id", bankAccountId);
+        params.put("idempotency_id", disbursementIdempotencyID);
+        params.put("bank_account_id", bankAccountID);
 
         try {
             CreateDisbursementResponse response = loan.createDisbursement(params, xfersAppApiKey);
             Disbursement disbursement = response.getDisbursement();
             System.out.println("Disbursement ID: " + disbursement.getId());
-            System.out.println("Disbursement Idempotency ID: " + disbursement.getIdempotencyId());
+            System.out.println("Disbursement Idempotency ID: " + disbursement.getIdempotencyID());
             return response.getDisbursement();
         } catch (Exception e) {
             System.out.println("Create disbursement error: " + e);
@@ -275,9 +291,9 @@ public class SampleLoan {
     /**
      *  Get status of one disbursement.
      */
-    private static Disbursement exampleGetDisbursement(Loan loan, String contractId, String userApiToken) {
+    private static Disbursement exampleGetDisbursement(Loan loan, String contractID, String userApiToken) {
         try {
-            GetDisbursementResponse response = loan.getDisbursement(contractId, userApiToken);
+            GetDisbursementResponse response = loan.getDisbursement(contractID, userApiToken);
             return response.getDisbursement();
         } catch (Exception e) {
             System.out.println("Get disbursement error: " + e);
@@ -318,10 +334,10 @@ public class SampleLoan {
         BigDecimal collectionFee = new BigDecimal("0"); // should be zero
 
         try {
-            RepaymentResponse response = loan.createRepayment(amount, collectionFee, repaymentIdempotencyId, userApiToken);
-            String repaymentId = response.getLoanRepaymentId();
-            System.out.println("Repayment ID: " + repaymentId);
-            return repaymentId;
+            CreateRepaymentResponse response = loan.createRepayment(amount, collectionFee, repaymentIdempotencyID, userApiToken);
+            String repaymentID = response.getLoanRepaymentID();
+            System.out.println("Repayment ID: " + repaymentID);
+            return repaymentID;
         } catch (Exception e) {
             System.out.println("Create repayment error: " + e);
             return null;
@@ -331,7 +347,7 @@ public class SampleLoan {
     /**
      *  List all repayments that is done for a specific loan.
      */
-    private static List<RepaymentResponse> exampleGetAllRepayments(Loan loan, String userApiToken) {
+    private static List<Repayment> exampleGetAllRepayments(Loan loan, String userApiToken) {
         try {
             return loan.getAllRepayments(userApiToken);
         } catch (Exception e) {
@@ -343,7 +359,7 @@ public class SampleLoan {
     /**
      *  Get status of one repayment.
      */
-    private static RepaymentResponse exampleGetRepayment(Loan loan, String repaymentID, String userApiToken) {
+    private static Repayment exampleGetRepayment(Loan loan, String repaymentID, String userApiToken) {
         try {
             return loan.getRepayment(repaymentID, userApiToken);
         } catch (Exception e) {

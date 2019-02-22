@@ -32,7 +32,7 @@ public class SampleLoan {
     /**
     * This sample code show cases the step required to request a loan > 
     * check the status of the loan > if approved create a disbursement to the end user
-    **/
+    */
     public static void main(String[] args) {
         Xfers.setIDSandbox();
 

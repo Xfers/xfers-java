@@ -131,8 +131,8 @@ public class SampleLoan {
         Map<String, Object> updateParams = new HashMap<String, Object>();
 
         // Mandatory basic fields
-        updateParams.put("id_front", "http://gambar_ktp.jpg"); // Photo of person's KTP
-        updateParams.put("selfie_2id", "http://gambar_selfie.jpg"); // Selfie or screen capture of the liveness test
+        updateParams.put("id_front_url", "http://gambar_ktp.jpg"); // Photo of person's KTP
+        updateParams.put("selfie_2id_url", "http://gambar_selfie.jpg"); // Selfie or screen capture of the liveness test
         updateParams.put("mother_maiden_name", "Jane Doe");
         updateParams.put("postal_code", "12345");
 

@@ -43,7 +43,7 @@ public class SampleLoan {
 
         // Step 1: create and verify user.
         // Need to verify user first to comply with regulation. 
-        // After that you can choose to add the user's bank account tag to the user as show case in this example.
+        // After that you can choose to add the user's bank account tag as shown in this example.
         /*********************** USER KYC FLOW ***********************/
 
         String userApiToken = exampleSignUp(xfersAppApiKey, xfersAppSecretKey, phoneNumber);

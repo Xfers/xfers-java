@@ -148,6 +148,7 @@ public class SampleLoan {
             System.out.println("User ID: " + response.getId());
             return response.getUserApiToken();
         } catch (Exception e) {
+            // Case: xfersAppApiKey and xfersAppSecretKey are invalid or not matching
             System.out.println("Sign up error: " + e);
             return null;
         }
@@ -183,6 +184,7 @@ public class SampleLoan {
             User.update(updateParams, userApiToken);
             System.out.println("KYC data submission success!");
         } catch(Exception e) {
+            // Case: Mandatory basic fields is not complete.
             System.out.println("Kyc data submission error: " + e);
         }
     }
@@ -215,6 +217,8 @@ public class SampleLoan {
             System.out.println("Bank ID: " + bankId);
             return bankId;
         } catch (Exception e) {
+            // Case 1: Account number is not found.
+            // Case 2: Bank abbreviation is invalid.
             System.out.println("Add bank account error: " + e);
             return "";
         }
@@ -264,6 +268,7 @@ public class SampleLoan {
             System.out.println("Loan ID: " + loanId);
             return loanId;
         } catch (Exception e) {
+            // Case: Incomplete data (including customer, collateral, loan detail, and installment).
             System.out.println("Create loan error: " + e);
             return null;
         }
@@ -278,6 +283,7 @@ public class SampleLoan {
         try {
             return Loan.getLoan(loanId, userApiToken);
         } catch (Exception e) {
+            // Case: that loan (via loanId) is not associated with the user (via userApiToken).
             System.out.println("Get loan error: " + e);
             return null;
         }
@@ -300,6 +306,8 @@ public class SampleLoan {
             System.out.println("Disbursement Idempotency ID: " + disbursement.getIdempotencyId());
             return response.getDisbursement();
         } catch (Exception e) {
+            // Case 1: that loan is not associated with the user (via userApiToken).
+            // Case 2: disbursementIdempotencyId is duplicated.
             System.out.println("Create disbursement error: " + e);
             return null;
         }
@@ -313,6 +321,7 @@ public class SampleLoan {
             ListDisbursementResponse response = loan.getAllDisbursements(userApiToken);
             return response.getDisbursements();
         } catch (Exception e) {
+            // Case: that loan is not associated with the user (via userApiToken).
             System.out.println("Get all disbursements error: " + e);
             return null;
         }
@@ -326,6 +335,7 @@ public class SampleLoan {
             GetDisbursementResponse response = loan.getDisbursement(contractId, userApiToken);
             return response.getDisbursement();
         } catch (Exception e) {
+            // Case 1: Disbursement (via contractId) is not associated with the loan.
             System.out.println("Get disbursement error: " + e);
             return null;
         }
@@ -352,6 +362,7 @@ public class SampleLoan {
             loan.createDisbursementReport(userApiToken);
             System.out.println("Create disbursement report success!");
         } catch (Exception e) {
+            // Case: that loan is not associated with the user (via userApiToken).
             System.out.println("Create disbursement report error: " + e);
         }
     }
@@ -369,6 +380,8 @@ public class SampleLoan {
             System.out.println("Repayment ID: " + repaymentId);
             return repaymentId;
         } catch (Exception e) {
+            // Case 1: that loan is not associated with the user (via userApiToken).
+            // Case 2: merchant doesn't have enough money to payout the user.
             System.out.println("Create repayment error: " + e);
             return null;
         }
@@ -381,6 +394,7 @@ public class SampleLoan {
         try {
             return loan.getAllRepayments(userApiToken);
         } catch (Exception e) {
+            // Case: that loan is not associated with the user (via userApiToken).
             System.out.println("Get all repayments error: " + e);
             return null;
         }
@@ -393,6 +407,8 @@ public class SampleLoan {
         try {
             return loan.getRepayment(repaymentID, userApiToken);
         } catch (Exception e) {
+            // Case 1: that loan is not associated with the user (via userApiToken).
+            // Case 2: the repayment (via repaymentId) is not associated with the loan.
             System.out.println("Get repayment error: " + e);
             return null;
         }

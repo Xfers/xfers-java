@@ -80,7 +80,7 @@ public class SampleLoan {
 
         String loanId = exampleCreateLoan(userApiToken);
 
-        // If loanId is null, then it means loan creation is failed.
+        // If loanId is null, then it means loan creation failed.
         // If the loan is not created, the disbursement cannot be done
         if (null == loanId) {
             return;

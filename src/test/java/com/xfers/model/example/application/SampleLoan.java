@@ -17,8 +17,6 @@ import com.xfers.model.channeling.loan.response.RepaymentResponse;
 import com.xfers.model.response.ConnectResponse;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -386,19 +384,10 @@ public class SampleLoan {
      */
     private static void exampleCallOutstandingRepayments(String xfersAppApiKey) {
         try {
-            Loan.outstandingLoanRepayments(parseDate("2019-1-21"), 1, 100000, xfersAppApiKey);
+            Loan.outstandingLoanRepayments("2019-1-21", 1, 100000, xfersAppApiKey);
             System.out.println("Call outstanding repayments success!");
         } catch (Exception e) {
             System.out.println("Call outstanding repayments error: " + e);
-        }
-    }
-
-    private static Date parseDate(String date) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
-        } catch (Exception e) {
-            System.out.println("Date parse error: " + e);
-            return new Date();
         }
     }
 

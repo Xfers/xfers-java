@@ -26,10 +26,10 @@ public class Loan {
     private static final String loanURL = "/loans";
     private String id;
     private String status;
-    private ErrorReason lastRacErrorReason;
-    private ErrorReason lastSlikErrorReason;
-    private ErrorReason lastWithdrawalOnBehalfErrorReason;
-    private ErrorReason lastDisbursementReportErrorReason;
+    private Map<String, Object> lastRacErrorReason;
+    private Map<String, Object> lastSlikErrorReason;
+    private Map<String, Object> lastWithdrawalOnBehalfErrorReason;
+    private Map<String, Object> lastDisbursementReportErrorReason;
     @SerializedName("collateral_data") private Collateral collateral;
     @SerializedName("company_management_data") private CompanyManagement companyManagement;
     @SerializedName("customer_data") private Customer customer;
@@ -222,10 +222,10 @@ public class Loan {
         APIResource.request(APIResource.RequestMethod.POST, url, params, xfersAppApiKey);
     }
 
-    public static void outstandingLoanRepayments(Date transactionDate, Integer page, Integer perPage, String xfersAppApiKey)
+    public static void outstandingLoanRepayments(String transactionDate, Integer page, Integer perPage, String xfersAppApiKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String,Object>();
-        params.put("transaction_date", new SimpleDateFormat("yyyy-MM-dd").format(transactionDate));
+        params.put("transaction_date", transactionDate);
         params.put("page", page);
         params.put("per_page", perPage);
         String url = loanURL + "/repayments/reconciliations";
@@ -251,20 +251,32 @@ public class Loan {
         return status;
     }
 
-    public ErrorReason getLastRacErrorReason() {
-        return lastRacErrorReason;
+    public String getLastRacErrorReason() {
+        if (null == lastRacErrorReason) {
+            return null;
+        }
+        return lastRacErrorReason.toString();
     }
 
-    public ErrorReason getLastSlikErrorReason() {
-        return lastSlikErrorReason;
+    public String getLastSlikErrorReason() {
+        if (null == lastSlikErrorReason) {
+            return null;
+        }
+        return lastSlikErrorReason.toString();
     }
 
-    public ErrorReason getLastWithdrawalOnBehalfErrorReason() {
-        return lastWithdrawalOnBehalfErrorReason;
+    public String getLastWithdrawalOnBehalfErrorReason() {
+        if (null == lastWithdrawalOnBehalfErrorReason) {
+            return null;
+        }
+        return lastWithdrawalOnBehalfErrorReason.toString();
     }
 
-    public ErrorReason getLastDisbursementReportErrorReason() {
-        return lastDisbursementReportErrorReason;
+    public String getLastDisbursementReportErrorReason() {
+        if (null == lastDisbursementReportErrorReason) {
+            return null;
+        }
+        return lastDisbursementReportErrorReason.toString();
     }
 
     public Collateral getCollateral() {

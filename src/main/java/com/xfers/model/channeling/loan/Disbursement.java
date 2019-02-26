@@ -1,7 +1,6 @@
 package com.xfers.model.channeling.loan;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,12 +21,12 @@ public class Disbursement {
     private String accountNo;
     private String bankAbbrev;
     private Boolean express;
-    private Date valueDate;
+    private String valueDate;
     private String failureReason;
     private String walletName;
     private String arrival;
     private String comment;
-    private Date createdAt;
+    private String createdAt;
 
     public String mockStatusChange(String status, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
@@ -80,7 +79,7 @@ public class Disbursement {
         return this.express;
     }
 
-    public Date getValueDate() {
+    public String getValueDate() {
         return this.valueDate;
     }
 
@@ -100,7 +99,7 @@ public class Disbursement {
         return this.comment;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return this.createdAt;
     }
 }

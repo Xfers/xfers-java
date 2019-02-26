@@ -1,14 +1,13 @@
 package com.xfers.model.channeling.loan;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class Collateral {
     private String productcode;
     private String merkcode;
     private String modelcode;
     private String collateralno;
-    private Date collateraldate;
+    private String collateraldate;
     private String collateraladdress;
     private String collateralcityid;
     private String collateralname;
@@ -23,8 +22,8 @@ public class Collateral {
     private String collateralkind;
     private String collateralpurpose;
     private String policeno;
-    private Date stnkexpired;
-    private Date surveydate;
+    private String stnkexpired;
+    private String surveydate;
     private String bindtypecode;
     private String collateraltypecode;
     private String sbrankcode;
@@ -51,7 +50,7 @@ public class Collateral {
         return this;
     }
 
-    public Collateral collateraldate(Date collateraldate) {
+    public Collateral collateraldate(String collateraldate) {
         this.collateraldate = collateraldate;
         return this;
     }
@@ -126,12 +125,12 @@ public class Collateral {
         return this;
     }
 
-    public Collateral stnkexpired(Date stnkexpired) {
+    public Collateral stnkexpired(String stnkexpired) {
         this.stnkexpired = stnkexpired;
         return this;
     }
 
-    public Collateral surveydate(Date surveydate) {
+    public Collateral surveydate(String surveydate) {
         this.surveydate = surveydate;
         return this;
     }
@@ -177,7 +176,7 @@ public class Collateral {
         return collateralno;
     }
 
-    public Date getCollateraldate() {
+    public String getCollateraldate() {
         return collateraldate;
     }
 
@@ -237,11 +236,11 @@ public class Collateral {
         return policeno;
     }
 
-    public Date getStnkexpired() {
+    public String getStnkexpired() {
         return stnkexpired;
     }
 
-    public Date getSurveydate() {
+    public String getSurveydate() {
         return surveydate;
     }
 

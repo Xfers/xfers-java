@@ -28,7 +28,7 @@ public class SampleLoan {
     private static String refno = ""; // for creating new loan
     private static String disbursementIdempotencyId = ""; // for creating new disbursement
     private static String repaymentIdempotencyId = ""; // for creating new loan repayment
-    
+
     /**
     * This sample code show cases the step required to request a loan > 
     * check the status of the loan > if approved create a disbursement to the end user
@@ -422,17 +422,17 @@ public class SampleLoan {
             .custdati("0102")
             .idtype(1)
             .idnumber("3761493104850099")
-            .idexpired(parseDate("2050-01-01"))
+            .idexpired("2050-01-01")
             .gender(1)
             .maritalstatus(0)
-            .birthdate(parseDate("1999-01-01"))
+            .birthdate("1999-01-01")
             .birthplace("kotalahir")
             .birthdati("birdati")
             .economycode("011110")
             .debiturcode("907")
             .mmn("namaibu")
             .homestatus(1)
-            .livedsince(parseDate("2015-01-01"))
+            .livedsince("2015-01-01")
             .phonearea("+62")
             .phoneno("08123456789")
             .sameidhomeaddr(1)
@@ -476,7 +476,7 @@ public class SampleLoan {
             .collateralkind("KTA01")
             .collateralpurpose("tujuankolateral")
             .policeno("X 1234 YZ")
-            .surveydate(parseDate("2019-02-01"))
+            .surveydate("2019-02-01")
             .bindtypecode("99")
             .collateraltypecode("250")
             .collateralvalue(new BigDecimal("100000000"))
@@ -496,7 +496,7 @@ public class SampleLoan {
             .loantype(0)
             .effectiverate(new BigDecimal("0.25"))
             .installment(new BigDecimal("1000000.0"))
-            .firstinstdate(parseDate("2019-03-01"))
+            .firstinstdate("2019-03-01")
             .admfee(new BigDecimal("0.0"))
             .inscode("001")
             .inspremi("0.0")
@@ -520,7 +520,7 @@ public class SampleLoan {
      */
     private static Installment exampleInstallment() {
         return new Installment()
-            .duedate(parseDate("2019-04-01"))
+            .duedate("2019-04-01")
             .principal(new BigDecimal("1000000.0"))
             .interest(new BigDecimal("10000000.0"))
             .installfee(new BigDecimal("50000.0"))

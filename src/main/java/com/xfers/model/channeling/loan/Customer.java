@@ -1,7 +1,6 @@
 package com.xfers.model.channeling.loan;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class Customer {
     private String din;
@@ -20,22 +19,22 @@ public class Customer {
     private String custdati;
     private Integer idtype;
     private String idnumber;
-    private Date idexpired;
+    private String idexpired;
     private Integer gender;
     private Integer maritalstatus;
-    private Date birthdate;
+    private String birthdate;
     private String birthplace;
     private String birthdati;
-    private Date worksince;
+    private String worksince;
     private Integer employeests;
-    private Date contractend;
+    private String contractend;
     private String lasteducation;
     private String economycode;
     private String debiturcode;
     private String mmn; //Mother's maiden name
     private String npwp;
     private Integer homestatus;
-    private Date livedsince;
+    private String livedsince;
     private String phonearea;
     private String phoneno;
     private String mobileno;
@@ -53,7 +52,7 @@ public class Customer {
     private String custziphome;
     private String custdatihome;
     private String spousename;
-    private Date spousebirthdate;
+    private String spousebirthdate;
     private String spousebirthplace;
     private Integer spouseidtype;
     private String spouseidnumber;
@@ -78,7 +77,7 @@ public class Customer {
     private String companyzip;
     private String companyphone;
     private String deedno;
-    private Date deeddate;
+    private String deeddate;
     private String corporatetype;
     private String jobid;
     private String jobtitleid;
@@ -160,7 +159,7 @@ public class Customer {
         return this;
     }
 
-    public Customer idexpired(Date idexpired) {
+    public Customer idexpired(String idexpired) {
         this.idexpired = idexpired;
         return this;
     }
@@ -175,7 +174,7 @@ public class Customer {
         return this;
     }
 
-    public Customer birthdate(Date birthdate) {
+    public Customer birthdate(String birthdate) {
         this.birthdate = birthdate;
         return this;
     }
@@ -190,7 +189,7 @@ public class Customer {
         return this;
     }
 
-    public Customer worksince(Date worksince) {
+    public Customer worksince(String worksince) {
         this.worksince = worksince;
         return this;
     }
@@ -200,7 +199,7 @@ public class Customer {
         return this;
     }
 
-    public Customer contractend(Date contractend) {
+    public Customer contractend(String contractend) {
         this.contractend = contractend;
         return this;
     }
@@ -235,7 +234,7 @@ public class Customer {
         return this;
     }
 
-    public Customer livedsince(Date livedsince) {
+    public Customer livedsince(String livedsince) {
         this.livedsince = livedsince;
         return this;
     }
@@ -320,7 +319,7 @@ public class Customer {
         return this;
     }
 
-    public Customer spousebirthdate(Date spousebirthdate) {
+    public Customer spousebirthdate(String spousebirthdate) {
         this.spousebirthdate = spousebirthdate;
         return this;
     }
@@ -440,7 +439,7 @@ public class Customer {
         return this;
     }
 
-    public Customer deeddate(Date deeddate) {
+    public Customer deeddate(String deeddate) {
         this.deeddate = deeddate;
         return this;
     }
@@ -557,7 +556,7 @@ public class Customer {
         return idnumber;
     }
 
-    public Date getIdexpired() {
+    public String getIdexpired() {
         return idexpired;
     }
 
@@ -569,7 +568,7 @@ public class Customer {
         return maritalstatus;
     }
 
-    public Date getBirthdate() {
+    public String getBirthdate() {
         return birthdate;
     }
 
@@ -581,7 +580,7 @@ public class Customer {
         return birthdati;
     }
 
-    public Date getWorksince() {
+    public String getWorksince() {
         return worksince;
     }
 
@@ -589,7 +588,7 @@ public class Customer {
         return employeests;
     }
 
-    public Date getContractend() {
+    public String getContractend() {
         return contractend;
     }
 
@@ -617,7 +616,7 @@ public class Customer {
         return homestatus;
     }
 
-    public Date getLivedsince() {
+    public String getLivedsince() {
         return livedsince;
     }
 
@@ -685,7 +684,7 @@ public class Customer {
         return spousename;
     }
 
-    public Date getSpousebirthdate() {
+    public String getSpousebirthdate() {
         return spousebirthdate;
     }
 
@@ -781,7 +780,7 @@ public class Customer {
         return deedno;
     }
 
-    public Date getDeeddate() {
+    public String getDeeddate() {
         return deeddate;
     }
 

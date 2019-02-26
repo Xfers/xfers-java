@@ -1,7 +1,6 @@
 package com.xfers.model.channeling.loan;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class Repayment {
     private String id;
@@ -10,7 +9,7 @@ public class Repayment {
     private String accno;
     private String accountname;
     private String period;
-    private Date duedate;
+    private String duedate;
     private BigDecimal installment;
     private BigDecimal installfeeaccount;
     private String dpd;
@@ -57,7 +56,7 @@ public class Repayment {
         return period;
     }
 
-    public Date getDuedate() {
+    public String getDuedate() {
         return duedate;
     }
 

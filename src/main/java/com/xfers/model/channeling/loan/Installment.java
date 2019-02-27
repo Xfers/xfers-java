@@ -1,11 +1,10 @@
 package com.xfers.model.channeling.loan;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class Installment {
     private Integer period;
-    private Date duedate;
+    private String duedate;
     private BigDecimal principal;
     private BigDecimal interest;
     private BigDecimal installfee;
@@ -15,7 +14,7 @@ public class Installment {
         return this;
     }
 
-    public Installment duedate(Date duedate) {
+    public Installment duedate(String duedate) {
         this.duedate = duedate;
         return this;
     }
@@ -39,7 +38,7 @@ public class Installment {
         return period;
     }
 
-    public Date getDuedate() {
+    public String getDuedate() {
         return duedate;
     }
 

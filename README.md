@@ -16,7 +16,7 @@ Add this dependency to your project's POM:
 <dependency>
   <groupId>com.xfers</groupId>
   <artifactId>xfers-java</artifactId>
-  <version>1.13.0</version>
+  <version>1.14.0</version>
 </dependency>
 ```
 

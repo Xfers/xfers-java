@@ -1,7 +1,6 @@
 package com.xfers.model.channeling.loan.response;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 import com.xfers.model.channeling.loan.Repayment;
 
@@ -11,7 +10,7 @@ public class RepaymentResponse {
     private String status;
     private BigDecimal amount;
     private BigDecimal collectionFee;
-    private Date createdAt;
+    private String createdAt;
     private Repayment partnerBankResponse;
 
     public String getLoanRepaymentId() {
@@ -34,7 +33,7 @@ public class RepaymentResponse {
         return this.collectionFee;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return this.createdAt;
     }
 

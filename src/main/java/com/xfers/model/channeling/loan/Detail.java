@@ -1,7 +1,6 @@
 package com.xfers.model.channeling.loan;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 public class Detail {
     private String refno;
@@ -11,7 +10,7 @@ public class Detail {
     private Integer loantype;
     private BigDecimal effectiverate;
     private BigDecimal installment;
-    private Date firstinstdate;
+    private String firstinstdate;
     private BigDecimal admfee;
     private String inscode;
     private String inspremi;
@@ -63,7 +62,7 @@ public class Detail {
         return this;
     }
 
-    public Detail firstinstdate(Date firstinstdate) {
+    public Detail firstinstdate(String firstinstdate) {
         this.firstinstdate = firstinstdate;
         return this;
     }
@@ -171,7 +170,7 @@ public class Detail {
         return installment;
     }
 
-    public Date getFirstinstdate() {
+    public String getFirstinstdate() {
         return firstinstdate;
     }
 

@@ -14,11 +14,9 @@ import com.xfers.model.channeling.loan.response.ListRepaymentResponse;
 import com.xfers.model.channeling.loan.response.RepaymentResponse;
 import com.xfers.net.APIResource;
 import com.xfers.serializer.SnakeToCamelDeserializer;
-import com.xfers.serializer.YearMonthDateSerializer;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,10 +26,10 @@ public class Loan {
     private static final String loanURL = "/loans";
     private String id;
     private String status;
-    private String lastRacErrorReason;
-    private String lastSlikErrorReason;
-    private String lastWithdrawalOnBehalfErrorReason;
-    private String lastDisbursementReportErrorReason;
+    private Map<String, Object> lastRacErrorReason;
+    private Map<String, Object> lastSlikErrorReason;
+    private Map<String, Object> lastWithdrawalOnBehalfErrorReason;
+    private Map<String, Object> lastDisbursementReportErrorReason;
     @SerializedName("collateral_data") private Collateral collateral;
     @SerializedName("company_management_data") private CompanyManagement companyManagement;
     @SerializedName("customer_data") private Customer customer;
@@ -101,7 +99,7 @@ public class Loan {
             params.put("company_management_data", companyManagement);
         }
 
-        String stringParams = YearMonthDateSerializer.create().toJson(params);
+        String stringParams = new Gson().toJson(params);
 
         String url = loanURL;
         String response = new CustomHTTPConnection().post(url, userApiToken, stringParams);
@@ -115,7 +113,7 @@ public class Loan {
             return "customer_data must be present!";
         }
         if (customer_hash instanceof Customer) {
-            params.put("customer_data", YearMonthDateSerializer.create().toJson((Customer)customer_hash));
+            params.put("customer_data", new Gson().toJson((Customer)customer_hash));
         }
 
         Object collateral_hash = params.get("collateral_data");
@@ -123,7 +121,7 @@ public class Loan {
             return "collateral_data must be present!";
         }
         if (collateral_hash instanceof Collateral) {
-            params.put("collateral_data", YearMonthDateSerializer.create().toJson((Collateral)collateral_hash));
+            params.put("collateral_data", new Gson().toJson((Collateral)collateral_hash));
         }
 
         Object loan_detail_hash = params.get("loan_data");
@@ -131,7 +129,7 @@ public class Loan {
             return "loan_data must be present!";
         }
         if (loan_detail_hash instanceof Detail) {
-            params.put("loan_data", YearMonthDateSerializer.create().toJson((Detail)loan_detail_hash));
+            params.put("loan_data", new Gson().toJson((Detail)loan_detail_hash));
         }
 
         Object installment_hash = params.get("installment_data");
@@ -139,12 +137,12 @@ public class Loan {
             return "installment_data must be present!";
         }
         if (installment_hash instanceof Installment) {
-            params.put("installment_data", YearMonthDateSerializer.create().toJson((Installment)installment_hash));
+            params.put("installment_data", new Gson().toJson((Installment)installment_hash));
         }
 
         Object company_management_hash = params.get("company_management_data");
         if (null != company_management_hash && company_management_hash instanceof CompanyManagement) {
-            params.put("company_management_data", YearMonthDateSerializer.create().toJson((CompanyManagement)company_management_hash));
+            params.put("company_management_data", new Gson().toJson((CompanyManagement)company_management_hash));
         }
 
         String url = loanURL;
@@ -224,10 +222,10 @@ public class Loan {
         APIResource.request(APIResource.RequestMethod.POST, url, params, xfersAppApiKey);
     }
 
-    public static void outstandingLoanRepayments(Date transactionDate, Integer page, Integer perPage, String xfersAppApiKey)
+    public static void outstandingLoanRepayments(String transactionDate, Integer page, Integer perPage, String xfersAppApiKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String,Object>();
-        params.put("transaction_date", new SimpleDateFormat("yyyy-MM-dd").format(transactionDate));
+        params.put("transaction_date", transactionDate);
         params.put("page", page);
         params.put("per_page", perPage);
         String url = loanURL + "/repayments/reconciliations";
@@ -254,19 +252,31 @@ public class Loan {
     }
 
     public String getLastRacErrorReason() {
-        return lastRacErrorReason;
+        if (null == lastRacErrorReason) {
+            return null;
+        }
+        return lastRacErrorReason.toString();
     }
 
     public String getLastSlikErrorReason() {
-        return lastSlikErrorReason;
+        if (null == lastSlikErrorReason) {
+            return null;
+        }
+        return lastSlikErrorReason.toString();
     }
 
     public String getLastWithdrawalOnBehalfErrorReason() {
-        return lastWithdrawalOnBehalfErrorReason;
+        if (null == lastWithdrawalOnBehalfErrorReason) {
+            return null;
+        }
+        return lastWithdrawalOnBehalfErrorReason.toString();
     }
 
     public String getLastDisbursementReportErrorReason() {
-        return lastDisbursementReportErrorReason;
+        if (null == lastDisbursementReportErrorReason) {
+            return null;
+        }
+        return lastDisbursementReportErrorReason.toString();
     }
 
     public Collateral getCollateral() {

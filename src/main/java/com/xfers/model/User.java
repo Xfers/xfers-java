@@ -8,6 +8,7 @@ import com.xfers.exception.APIException;
 import com.xfers.exception.AuthenticationException;
 import com.xfers.exception.InvalidRequestException;
 import com.xfers.net.APIResource;
+import com.xfers.serializer.SnakeToCamelDeserializer;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,35 +16,51 @@ import java.util.Map;
 
 public class User {
     private static final String resourceUrl = "/user";
-    @SerializedName("available_balance") private BigDecimal availableBalance;
-    @SerializedName("ledger_balance") private BigDecimal ledgerBalance;
-    @SerializedName("credit_card_rates") private BigDecimal creditCardRates;
-    @SerializedName("credit_card_fees") private BigDecimal creditCardFees;
-    @SerializedName("bank_transfer_rates") private BigDecimal bankTransferRates;
-    @SerializedName("bank_transfer_fees") private BigDecimal bankTransferFees;
-    @SerializedName("first_name") private String firstName;
-    @SerializedName("last_name") private String lastName;
-    @SerializedName("address_line_1") private String addressLine1;
-    @SerializedName("address_line_2") private String addressLine2;
-    @SerializedName("postal_code") private String postalCode;
-    @SerializedName("identity_no") private String identityNo;
-    @SerializedName("id_document") private String idDocument;
-    @SerializedName("id_back") private String idBack;
-    @SerializedName("id_front") private String idFront;
-    @SerializedName("id_selfie") private String idSelfie;
-    @SerializedName("phone_no") private String phoneNo;
-    @SerializedName("multi_bank_account_detected") private Boolean multiBankAccountDetected;
-    @SerializedName("account_locked") private Boolean accountLocked;
-    @SerializedName("kyc_limit_remaining") private BigDecimal kycLimitRemaining;
-    @SerializedName("kyc_verified") private Boolean kycVerified;
-    @SerializedName("date_of_birth") private String dateOfBirth;
-    @SerializedName("bank_accounts") private List<BankAccount> bankAccounts;
-    @SerializedName("meta_data") private String metaData;
-    @SerializedName("kyc_status") private String kycStatus;
 
+    private BigDecimal availableBalance;
+    private BigDecimal ledgerBalance;
+    private BigDecimal creditCardRates;
+    private BigDecimal creditCardFees;
+    private BigDecimal bankTransferRates;
+    private BigDecimal bankTransferFees;
+    private String firstName;
+    private String lastName;
+    private String addressLine1;
+    private String addressLine2;
+    private String postalCode;
+    private String identityNo;
+    private String idDocument;
+    private String idBack;
+    private String idFront;
+    private String idSelfie;
+    private String phoneNo;
+    private Boolean multiBankAccountDetected;
+    private Boolean accountLocked;
+    private BigDecimal kycLimitRemaining;
+    private Boolean kycVerified;
+    private String dateOfBirth;
+    private List<BankAccount> bankAccounts;
+    private String metaData;
+    private String kycStatus;
     private String country;
     private String email;
     private String nationality;
+
+    // KTP Fields
+    @SerializedName("selfie_2id") private String selfie2id;
+    private String motherMaidenName;
+    private String state;
+    private String city;
+    private String fullName;
+    private String placeOfBirth;
+    private String gender;
+    private String bloodType;
+    private String rtRw;
+    private String administrativeVillage;
+    private String district;
+    private String religion;
+    private String maritalStatus;
+    private String occupation;
 
     public static Response registerCallback(Map<String, Object> params, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
@@ -75,8 +92,7 @@ public class User {
     public static User retrieve(String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String response = APIResource.request(APIResource.RequestMethod.GET, resourceUrl, null, userApiToken);
-        Gson gson = new Gson();
-        return gson.fromJson(response, User.class);
+        return SnakeToCamelDeserializer.create().fromJson(response, User.class);
     }
 
     public static User retrieve()
@@ -87,8 +103,7 @@ public class User {
     public static User update(Map<String, Object> params, String userApiToken)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         String response = APIResource.request(APIResource.RequestMethod.PUT, resourceUrl, params, userApiToken);
-        Gson gson = new Gson();
-        return gson.fromJson(response, User.class);
+        return SnakeToCamelDeserializer.create().fromJson(response, User.class);
     }
 
     public static User update(Map<String, Object> params)
@@ -236,6 +251,62 @@ public class User {
 
     public String getKycStatus() {
         return kycStatus;
+    }
+
+    public String getSelfie2id() {
+        return this.selfie2id;
+    }
+
+    public String getMotherMaidenName() {
+        return this.motherMaidenName;
+    }
+
+    public String getState() {
+        return this.state;
+    }
+
+    public String getCity() {
+        return this.city;
+    }
+
+    public String getFullName() {
+        return this.fullName;
+    }
+
+    public String getPlaceOfBirth() {
+        return this.placeOfBirth;
+    }
+
+    public String getGender() {
+        return this.gender;
+    }
+
+    public String getBloodType() {
+        return this.bloodType;
+    }
+
+    public String getRtRw() {
+        return this.rtRw;
+    }
+
+    public String getAdministrativeVillage() {
+        return this.administrativeVillage;
+    }
+
+    public String getDistrict() {
+        return this.district;
+    }
+
+    public String getReligion() {
+        return this.religion;
+    }
+
+    public String getMaritalStatus() {
+        return this.maritalStatus;
+    }
+
+    public String getOccupation() {
+        return this.occupation;
     }
 
     @Override

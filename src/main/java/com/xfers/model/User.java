@@ -19,20 +19,12 @@ public class User {
 
     private BigDecimal availableBalance;
     private BigDecimal ledgerBalance;
-    private BigDecimal creditCardRates;
-    private BigDecimal creditCardFees;
-    private BigDecimal bankTransferRates;
-    private BigDecimal bankTransferFees;
     private String firstName;
     private String lastName;
-    private String addressLine1;
-    private String addressLine2;
+    @SerializedName("address_line_1") private String addressLine1;
+    @SerializedName("address_line_2") private String addressLine2;
     private String postalCode;
     private String identityNo;
-    private String idDocument;
-    private String idBack;
-    private String idFront;
-    private String idSelfie;
     private String phoneNo;
     private Boolean multiBankAccountDetected;
     private Boolean accountLocked;
@@ -47,7 +39,8 @@ public class User {
     private String nationality;
 
     // KTP Fields
-    @SerializedName("selfie_2id") private String selfie2id;
+    private String idFrontUrl;
+    @SerializedName("selfie_2id_url") private String selfie2idUrl;
     private String motherMaidenName;
     private String state;
     private String city;
@@ -149,22 +142,6 @@ public class User {
         return ledgerBalance;
     }
 
-    public BigDecimal getCreditCardRates() {
-        return creditCardRates;
-    }
-
-    public BigDecimal getCreditCardFees() {
-        return creditCardFees;
-    }
-
-    public BigDecimal getBankTransferRates() {
-        return bankTransferRates;
-    }
-
-    public BigDecimal getBankTransferFees() {
-        return bankTransferFees;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -187,22 +164,6 @@ public class User {
 
     public String getIdentityNo() {
         return identityNo;
-    }
-
-    public String getIdDocument() {
-        return idDocument;
-    }
-
-    public String getIdBack() {
-        return idBack;
-    }
-
-    public String getIdFront() {
-        return idFront;
-    }
-
-    public String getIdSelfie() {
-        return idSelfie;
     }
 
     public String getPhoneNo() {
@@ -253,8 +214,12 @@ public class User {
         return kycStatus;
     }
 
-    public String getSelfie2id() {
-        return this.selfie2id;
+    public String getIdFrontUrl() {
+        return this.idFrontUrl;
+    }
+
+    public String getSelfie2idUrl() {
+        return this.selfie2idUrl;
     }
 
     public String getMotherMaidenName() {

@@ -16,8 +16,6 @@ import com.xfers.net.APIResource;
 import com.xfers.serializer.SnakeToCamelDeserializer;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +24,10 @@ public class Loan {
     private static final String loanURL = "/loans";
     private String id;
     private String status;
-    private Map<String, Object> lastRacErrorReason;
-    private Map<String, Object> lastSlikErrorReason;
-    private Map<String, Object> lastWithdrawalOnBehalfErrorReason;
-    private Map<String, Object> lastDisbursementReportErrorReason;
+    private Object lastRacErrorReason;
+    private Object lastSlikErrorReason;
+    private Object lastWithdrawalOnBehalfErrorReason;
+    private Object lastDisbursementReportErrorReason;
     @SerializedName("collateral_data") private Collateral collateral;
     @SerializedName("company_management_data") private CompanyManagement companyManagement;
     @SerializedName("customer_data") private Customer customer;
@@ -73,7 +71,7 @@ public class Loan {
     }
 
     public static Loan fromJSON(String json) {
-        return new Gson().fromJson(json, Loan.class);
+        return SnakeToCamelDeserializer.create().fromJson(json, Loan.class);
     }
 
     public static Loan getLoan(String id, String userApiToken)

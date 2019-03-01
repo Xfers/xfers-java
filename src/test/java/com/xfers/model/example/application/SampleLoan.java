@@ -37,7 +37,7 @@ public class SampleLoan {
         String xfersAppApiKey = "";
         String xfersAppSecretKey = "";
         String phoneNumber = "";
-        
+
         // Step 1, need to verify user first to comply with regulation. 
         // After that you can chose to add the user's bank account tag to the user as show case
         // in this example.

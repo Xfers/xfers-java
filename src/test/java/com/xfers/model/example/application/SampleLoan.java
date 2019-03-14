@@ -372,7 +372,7 @@ public class SampleLoan {
      */
     private static LoanReconciliationResponse exampleCallOutstandingLoans(String xfersAppApiKey) {
         try {
-            return Loan.outstandingLoans("", "", 1, 100000, null, xfersAppApiKey);
+            return Loan.outstandingLoans("2019-02-25", "2019-03-01", 1, 100000, null, xfersAppApiKey);
         } catch (Exception e) {
             System.out.println("Call outstanding loans error: " + e);
             return null;
@@ -385,7 +385,7 @@ public class SampleLoan {
      */
     private static RepaymentReconciliationResponse exampleCallOutstandingRepayments(String xfersAppApiKey) {
         try {
-            return Loan.outstandingLoanRepayments("", "", 1, 100000, null, xfersAppApiKey);
+            return Loan.outstandingLoanRepayments("2019-03-10", "2019-03-11", 1, 100000, null, xfersAppApiKey);
         } catch (Exception e) {
             System.out.println("Call outstanding repayments error: " + e);
             return null;

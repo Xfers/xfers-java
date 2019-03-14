@@ -18,7 +18,6 @@ import com.xfers.model.channeling.loan.response.RepaymentReconciliationResponse;
 import com.xfers.model.channeling.loan.response.RepaymentResponse;
 import com.xfers.net.APIResource;
 import com.xfers.serializer.SnakeToCamelDeserializer;
-import com.xfers.serializer.UpperToLowerDeserializer;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;

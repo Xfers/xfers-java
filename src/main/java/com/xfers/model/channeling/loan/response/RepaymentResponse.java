@@ -38,9 +38,6 @@ public class RepaymentResponse {
     }
 
     public Repayment getPartnerBankResponse() {
-        if (null != this.partnerBankResponse && null == this.partnerBankResponse.getId()) {
-            this.partnerBankResponse.setId(id);
-        }
         return this.partnerBankResponse;
     }
 }

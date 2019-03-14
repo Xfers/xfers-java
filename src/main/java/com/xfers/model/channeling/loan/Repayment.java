@@ -3,7 +3,6 @@ package com.xfers.model.channeling.loan;
 import java.math.BigDecimal;
 
 public class Repayment {
-    private String id;
     private Boolean success;
     private String refno;
     private String accno;
@@ -22,19 +21,8 @@ public class Repayment {
     private BigDecimal penalty;
     private BigDecimal overdueinstallfee;
     private BigDecimal totaloverdueandpenalty;
+    private String paymentid;
     private String failurereason;
-
-    /**
-     * This function shouldn't be called. It is used only in deserializing CreateRepaymentResponse.
-     */
-    public Repayment setId(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public String getId() {
-        return id;
-    }
 
     public Boolean getSuccess() {
         return success;
@@ -106,6 +94,10 @@ public class Repayment {
 
     public BigDecimal getTotaloverdueandpenalty() {
         return totaloverdueandpenalty;
+    }
+
+    public String getPaymentid() {
+        return paymentid;
     }
 
     public String getFailurereason() {

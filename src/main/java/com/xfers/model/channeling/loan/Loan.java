@@ -2,19 +2,24 @@ package com.xfers.model.channeling.loan;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.xfers.exception.APIConnectionException;
 import com.xfers.exception.APIException;
 import com.xfers.exception.AuthenticationException;
 import com.xfers.exception.InvalidRequestException;
+import com.xfers.model.channeling.loan.response.BssResponse;
 import com.xfers.model.channeling.loan.response.CreateDisbursementResponse;
 import com.xfers.model.channeling.loan.response.GetDisbursementResponse;
 import com.xfers.model.channeling.loan.response.ListDisbursementResponse;
 import com.xfers.model.channeling.loan.response.ListRepaymentResponse;
+import com.xfers.model.channeling.loan.response.LoanReconciliationResponse;
+import com.xfers.model.channeling.loan.response.RepaymentReconciliationResponse;
 import com.xfers.model.channeling.loan.response.RepaymentResponse;
 import com.xfers.net.APIResource;
 import com.xfers.serializer.SnakeToCamelDeserializer;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -211,23 +216,36 @@ public class Loan {
         return SnakeToCamelDeserializer.create().fromJson(response, ListRepaymentResponse.class).getRepayments();
     }
 
-    public static void outstandingLoans(Integer page, Integer perPage, String xfersAppApiKey)
+    public static LoanReconciliationResponse outstandingLoans(String from, String to, Integer page, Integer perPage, String refno, String xfersAppApiKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String,Object>();
+        params.put("from", from);
+        params.put("to", to);
         params.put("page", page);
         params.put("per_page", perPage);
+        params.put("refno", refno);
+
         String url = loanURL + "/reconciliations";
-        APIResource.request(APIResource.RequestMethod.POST, url, params, xfersAppApiKey);
+        String response = APIResource.request(APIResource.RequestMethod.POST, url, params, xfersAppApiKey);
+        Type type = new TypeToken<BssResponse<LoanReconciliationResponse>>(){}.getType();
+        BssResponse<LoanReconciliationResponse> bssResponse = (BssResponse<LoanReconciliationResponse>)new Gson().fromJson(response, type);
+        return bssResponse.getResult();
     }
 
-    public static void outstandingLoanRepayments(String transactionDate, Integer page, Integer perPage, String xfersAppApiKey)
+    public static RepaymentReconciliationResponse outstandingLoanRepayments(String from, String to, Integer page, Integer perPage, String refno, String xfersAppApiKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String,Object>();
-        params.put("transaction_date", transactionDate);
+        params.put("from", from);
+        params.put("to", to);
         params.put("page", page);
         params.put("per_page", perPage);
+        params.put("refno", refno);
+
         String url = loanURL + "/repayments/reconciliations";
-        APIResource.request(APIResource.RequestMethod.POST, url, params, xfersAppApiKey);
+        String response = APIResource.request(APIResource.RequestMethod.POST, url, params, xfersAppApiKey);
+        Type type = new TypeToken<BssResponse<RepaymentReconciliationResponse>>(){}.getType();
+        BssResponse<RepaymentReconciliationResponse> bssResponse = (BssResponse<RepaymentReconciliationResponse>)new Gson().fromJson(response, type);
+        return bssResponse.getResult();
     }
 
     @Override

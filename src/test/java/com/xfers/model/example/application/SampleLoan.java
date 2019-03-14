@@ -13,6 +13,8 @@ import com.xfers.model.channeling.loan.Loan;
 import com.xfers.model.channeling.loan.response.CreateDisbursementResponse;
 import com.xfers.model.channeling.loan.response.GetDisbursementResponse;
 import com.xfers.model.channeling.loan.response.ListDisbursementResponse;
+import com.xfers.model.channeling.loan.response.LoanReconciliationResponse;
+import com.xfers.model.channeling.loan.response.RepaymentReconciliationResponse;
 import com.xfers.model.channeling.loan.response.RepaymentResponse;
 import com.xfers.model.response.ConnectResponse;
 
@@ -82,8 +84,7 @@ public class SampleLoan {
 
         exampleCreateDisbursementReport(loan, userApiToken);
         // callback at loan_disbursement_report_completed
-        
-        
+
         // Step 3: this showcases how a loan can be repaid. Calling the repayment function
         // will auto deduct from the user's wallet to be paid back to the bank.
         /*********************** REPAYMENT FLOW ***********************/
@@ -97,9 +98,9 @@ public class SampleLoan {
         // These are helper functions to check on outstanding loans for finance dept reconciliation.
         /*********************** RECONCILIATIONS ***********************/
 
-        exampleCallOutstandingLoans(xfersAppApiKey);
+        LoanReconciliationResponse loanReconResp = exampleCallOutstandingLoans(xfersAppApiKey);
         // callback at loan_reconciliation_requested
-        exampleCallOutstandingRepayments(xfersAppApiKey);
+        RepaymentReconciliationResponse repaymentReconResp = exampleCallOutstandingRepayments(xfersAppApiKey);
         // callback at loan_repayment_reconciliations_requested
     }
 
@@ -369,12 +370,12 @@ public class SampleLoan {
      *  Get outstanding loans from partnering bank.
      *  This will be used for reconciliation purpose.
      */
-    private static void exampleCallOutstandingLoans(String xfersAppApiKey) {
+    private static LoanReconciliationResponse exampleCallOutstandingLoans(String xfersAppApiKey) {
         try {
-            Loan.outstandingLoans(1, 100000, xfersAppApiKey);
-            System.out.println("Call outstanding loans success!");
+            return Loan.outstandingLoans("", "", 1, 100000, null, xfersAppApiKey);
         } catch (Exception e) {
             System.out.println("Call outstanding loans error: " + e);
+            return null;
         }
     }
 
@@ -382,12 +383,12 @@ public class SampleLoan {
      *  Get outstanding repayment from partnering bank of a given date.
      *  This will be used for reconciliation purpose.
      */
-    private static void exampleCallOutstandingRepayments(String xfersAppApiKey) {
+    private static RepaymentReconciliationResponse exampleCallOutstandingRepayments(String xfersAppApiKey) {
         try {
-            Loan.outstandingLoanRepayments("2019-1-21", 1, 100000, xfersAppApiKey);
-            System.out.println("Call outstanding repayments success!");
+            return Loan.outstandingLoanRepayments("", "", 1, 100000, null, xfersAppApiKey);
         } catch (Exception e) {
             System.out.println("Call outstanding repayments error: " + e);
+            return null;
         }
     }
 

@@ -83,8 +83,8 @@ public class XfersExample {
 
 ## Exceptions
 
-AuthenticationException -> given 401 by Xfers. These are usually xfers_api_token related bug.
-InvalidRequestException, -> given 400 error by Xfers. Most Expected Error will belong in this categort
-APIException -> status non 400, 401, 200 (usually indicates 500 error/ unexpected error, please escalate to Xfers when this happens.)
-APIConnectionException -> Happens if the HTTP method used is not in (POST, GET, PUT, PATCH). Should not happen in your client app.
+AuthenticationException -> given 401 by Xfers. These are usually xfers_api_token related bug.  
+InvalidRequestException, -> given 400 error by Xfers. Most Expected Error will belong in this categort  
+APIException -> status non 400, 401, 200. (usually indicates 500 error/ unexpected error, please escalate to Xfers when this happens)  
+APIConnectionException -> Happens if the HTTP method used is not in (POST, GET, PUT, PATCH). Should not happen in your client app.  
 UnirestException -> Happens if xfers URL given is unreachable (wrong URL). Should not happen in your client app.

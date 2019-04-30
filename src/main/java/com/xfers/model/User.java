@@ -34,6 +34,7 @@ public class User {
     private List<BankAccount> bankAccounts;
     private String metaData;
     private String kycStatus;
+    private String kycRejectedReason;
     private String country;
     private String email;
     private String nationality;
@@ -212,6 +213,10 @@ public class User {
 
     public String getKycStatus() {
         return kycStatus;
+    }
+
+    public String getKycRejectedReason() {
+        return kycRejectedReason;
     }
 
     public String getIdFrontUrl() {

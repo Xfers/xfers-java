@@ -34,7 +34,7 @@ public class User {
     private List<BankAccount> bankAccounts;
     private String metaData;
     private String kycStatus;
-    private String kycRejectedReason;
+    private List<String> kycRejectedReason;
     private String country;
     private String email;
     private String nationality;
@@ -215,7 +215,7 @@ public class User {
         return kycStatus;
     }
 
-    public String getKycRejectedReason() {
+    public List<String> getKycRejectedReason() {
         return kycRejectedReason;
     }
 

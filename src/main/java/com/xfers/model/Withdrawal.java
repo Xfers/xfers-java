@@ -20,6 +20,11 @@ public class Withdrawal {
     private String status;
     private String arrival;
     private String comment;
+    private String type;
+
+    public String getType() {
+        return this.type;
+    }
 
     public String getAccountNo() {
         return accountNo;

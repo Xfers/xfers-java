@@ -425,6 +425,7 @@ public class SampleLoan {
             .livedsince("2015-01-01")
             .phonearea("+62")
             .phoneno("08123456789")
+            .grossincome(new BigDecimal("10000000000"))
             .sameidhomeaddr(1)
             .custaddresshome("alamatsekarang")
             .custrthome("RT010")

@@ -25,6 +25,7 @@ public class Connect {
     public static ConnectResponse getToken(String phoneNumber, String OTP, String returnURL, String appKey, String secretKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String, Object>();
+        phoneNumber = validate_phone(phoneNumber);
         params.put("phone_no", phoneNumber);
         params.put("otp", OTP);
         params.put("signature", getSignature(phoneNumber, secretKey, OTP));
@@ -44,6 +45,7 @@ public class Connect {
     public static String authorize(String phoneNumber, String appKey, String secretKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String, Object>();
+        phoneNumber = validate_phone(phoneNumber);
         params.put("phone_no", phoneNumber);
         params.put("signature", getSignature(phoneNumber, secretKey));
 
@@ -59,6 +61,7 @@ public class Connect {
     public static ConnectResponse privateAuthorize(String phoneNumber, String appKey, String secretKey)
             throws AuthenticationException, InvalidRequestException, APIException, APIConnectionException, UnirestException {
         Map<String, Object> params = new HashMap<String, Object>();
+        phoneNumber = validate_phone(phoneNumber);
         params.put("phone_no", phoneNumber);
         params.put("signature", getSignature(phoneNumber, secretKey));
 
@@ -93,7 +96,16 @@ public class Connect {
         {
             if(phoneNumber.charAt(0) == '0')
             {
-                return "+62".concat(phoneNumber.substring(1));
+                phoneNumber = phoneNumber.replaceFirst("^0+(?!$)", "");
+                if (phoneNumber.charAt(0) == '6' && phoneNumber.charAt(1) == '2')
+                {
+                    return "+".concat(phoneNumber);
+                }
+                return "+62".concat(phoneNumber);
+            }
+            else if(phoneNumber.charAt(0) == '6' && phoneNumber.charAt(1) == '2')
+            {
+                return "+".concat(phoneNumber);
             }
             else
             {
@@ -102,6 +114,7 @@ public class Connect {
         }
 
     }
+
     public static String getSignature(String phoneNumber, String secretKey, String OTP) {
         String beforeSHA1;
         phoneNumber = validate_phone(phoneNumber);
